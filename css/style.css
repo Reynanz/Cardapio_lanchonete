@@ -1,0 +1,116 @@
+body{
+    display: flex;
+    background-color: red; 
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 5%;
+}
+
+label{
+    font-size: x-large;
+}
+
+input{
+    width: 50%;
+}
+
+textarea{
+    height: 50px;
+}
+
+#Cardápio{
+    display: grid;
+    width: 100%;
+    border-radius: 25px;
+    justify-items: center;
+    background-color: white;
+    padding: 2%;
+}
+
+#sec{
+    display: flex;
+    width: 100%;
+    border-radius: 25px;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(17, 165, 17);
+    gap: 5px;
+}
+#form{
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    height: 75% ;
+    gap: 12px;
+    padding: 12px;
+}
+
+#lista{
+    width: 90%;
+    list-style: none;
+    background: #1e1e1e; /* fundo escuro para contraste */
+    color: #fff;
+    white-space-collapse: break-spaces;
+    font-size: 1.3em;
+}
+
+#lista li {
+    width: 89%;
+    display: flex;
+    padding: 15px 20px;
+    color: #fff;
+    justify-content: space-between;
+    transition: background 0.3s ease;
+}
+#lista li:nth-child(odd) {
+    background: #6b6b6b;
+}
+
+#lista li:nth-child(even) {
+    background: #1e1e1e;
+}
+.banner {
+  position: relative;     /* referência para o botão */
+  width: 100%;
+  max-width: 1200px;      /* opcional, se quiser limitar */
+
+}
+.banner img {
+  width: 100%;   /* responsivo */
+  height: auto;
+  display: block;
+}
+.banner button {
+    position: absolute;
+    top: 68%;   
+    left: 50%;  
+    transform: translate(-50%, -50%) scale(1);
+
+    padding: 3% 7%;      /* escala junto com o container */
+    font-size: 200%;     /* escala junto com o container */
+
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease; 
+}
+
+.banner button:hover {
+    box-shadow: 0 0 15px #ff4d4d;
+    transform: translate(-50%, -50%) scale(1.1);
+}
+.botao{
+    background-color: rgb(132, 238, 132);
+    border-radius: 15px;
+    width: 25%;
+    height: 125%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.botao:hover{
+    box-shadow: 0 0 15px #4dff7a;
+    transform: scale(1.1);
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/script.js" ></script>
+    <title>Pizzaria da Vila</title>
+</head>
+<body>
+    <div class="navbar">
+    </div>
+
+    <div class="banner">
+        <img src="/image/bemvindo.png  " alt="Banner pizza">
+        <button class="cta" onclick="document.getElementById('sec').scrollIntoView({behavior: 'smooth'})">Fazer pedido</button>
+    </div>
+    
+    <section id="Cardápio">
+        <h2 style="justify-self: center;">Cardápio</h2>
+        <ul id="lista">
+            <li><span>Pizza de Quatro queijos</span><span>R$39,90</span></li>
+            <li><span>Pizza de frango com catupiry</span><span>R$37,90</span></li>
+            <li><span>Pizza portuguesa</span><span>R$38,90</span></li>
+            <li><span>Pizza de frango com bacon</span><span>R$41,90</span></li>
+            <li><span>Pizza de marguerita</span><span>R$39,90</span></li>
+            <li><span>Pizza de calabresa</span><span>R$38,90</span></li>
+            <li><span>Pizza de peito de peru</span><span>R$40,90</span></li>
+            <li><span>Pizza Pepperoni</span><span>R$30,00</span></li>
+            <li><span>Pizza de brigadeiro</span><span>R$42,90</span></li>
+            <li><span>Pizza de chocolate branco</span><span>R$39,90</span></li>
+            <li><span>Pizza de sorvete</span><span>R$39,25</span></li>
+        </ul>
+
+    </section> 
+
+    <section id="sec">
+        <h1>Faça seu pedido</h1>
+        <form method="post" id="form" >
+
+            <label>Nome:</label>
+            <input type="text" id="nome" required>
+
+            <label>Telefone:</label>
+            <input type="tel" id="telefone" required>
+
+            <label>Escolha sua pizza:</label>
+            <select id="pizzas">
+                <option value="4queijos">Pizza de Quatro queijos - R$39,90</option>
+                <option value="frangocatupiry">Pizza de frango com catupiry - R$37,90</option>
+                <option value="portuguesa">Pizza portuguesa - R$38,90</option>
+                <option value="frangobacon">Pizza de frango com bacon - R$41,90</option>
+                <option value="marguerita">Pizza de marguerita - R$39,90</option>
+                <option value="calabresa">Pizza de calabresa - R$38,90</option>
+                <option value="peru">Pizza de peito de peru - R$40,90</option>
+                <option value="peperoni">Pizza de peperoni - R$30,00</option>
+                <option value="brigadeiro">Pizza de brigadeiro - R$42,90</option>
+                <option value="chocolate">Pizza de chocolate branco - R$39,90</option>
+                <option value="sorvete">Pizza de sorvete - R$39,25</option>
+            </select>
+
+            <label>Observação:</label>
+            <textarea id="obs"></textarea>
+
+            <button type="submit" class="botao" onclick="validation()">Enviar</button>
+        </form>   
+    </section>
+</body>
+</html>
+    
