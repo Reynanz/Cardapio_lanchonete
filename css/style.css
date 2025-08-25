@@ -1,6 +1,6 @@
 body{
     display: flex;
-    background-color: red; 
+    background: linear-gradient(#baf7ba,#d34444); 
     flex-direction: column;
     align-items: center;
     gap: 15px;
@@ -11,84 +11,127 @@ label{
     font-size: x-large;
 }
 
-input{
-    width: 50%;
-}
-
 textarea{
     height: 50px;
 }
 
-#Cardápio{
+#Cardapio{
     display: grid;
     width: 100%;
     border-radius: 25px;
-    justify-items: center;
     background-color: white;
     padding: 2%;
 }
 
 #sec{
     display: flex;
+    align-items: center;
     width: 100%;
     border-radius: 25px;
     flex-direction: column;
-    align-items: center;
-    background-color: rgb(17, 165, 17);
+    background-color: rgb(126, 245, 126);
     gap: 5px;
 }
+
 #form{
     display: flex;
+    text-align: center;
     flex-direction: column;
+    align-items: center ;
     width: 50%;
     height: 75% ;
     gap: 12px;
     padding: 12px;
 }
 
-#lista{
-    width: 90%;
-    list-style: none;
-    background: #1e1e1e; /* fundo escuro para contraste */
-    color: #fff;
-    white-space-collapse: break-spaces;
-    font-size: 1.3em;
+#form input{
+    width: 170px;
+    padding: 10px 15px;
+    border: 2px solid #4CAF50;
+    border-radius: 12px;
+    outline: none;
+    transition: all 0.3s ease;
 }
 
-#lista li {
-    width: 89%;
-    display: flex;
-    padding: 15px 20px;
-    color: #fff;
-    justify-content: space-between;
-    transition: background 0.3s ease;
+table {
+    color: white;
+    box-shadow: 3px 3px 4px #504f4f;
+    background-color: #d34444;
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-family: Arial, sans-serif;
 }
-#lista li:nth-child(odd) {
+
+th, td {
+  padding: 10px;
+}
+
+.table th{
+    box-shadow: 0px 3px 4px #504f4f;
+    background-color: #d34444;
+}
+
+.table input[type="number"]{
+    width: 35px;
+    text-align: center;
+    padding: 10px 15px;
+    border: 2px solid #4CAF50;
+    border-radius: 12px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.table input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.table button{
+    padding: 5px 10px;
+    margin: 2px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #4CAF50;
+    color: white;
+    transition: 0.3s;
+}
+
+.table button:hover{
+    background: #45a049;
+}
+
+.table tr:nth-child(odd){
+    background: #1e1e1e;
+}
+
+.table tr:nth-child(even){
     background: #6b6b6b;
 }
 
-#lista li:nth-child(even) {
-    background: #1e1e1e;
-}
 .banner {
-  position: relative;     /* referência para o botão */
+  position: relative;     
   width: 100%;
-  max-width: 1200px;      /* opcional, se quiser limitar */
+  max-width: 1200px;
 
 }
+
 .banner img {
-  width: 100%;   /* responsivo */
+  width: 100%;
   height: auto;
   display: block;
 }
+
 .banner button {
     position: absolute;
     top: 68%;   
     left: 50%;  
     transform: translate(-50%, -50%) scale(1);
 
-    padding: 3% 7%;      /* escala junto com o container */
-    font-size: 200%;     /* escala junto com o container */
+    padding: 3% 7%;      
+    font-size: 200%;
+    max-height: 25%;
 
     background-color: #ff4d4d;
     color: white;
@@ -102,15 +145,46 @@ textarea{
     box-shadow: 0 0 15px #ff4d4d;
     transform: translate(-50%, -50%) scale(1.1);
 }
-.botao{
-    background-color: rgb(132, 238, 132);
-    border-radius: 15px;
-    width: 25%;
-    height: 125%;
+
+.botaum{
+    padding: 5px 10px;
+    margin: 2px;
+    width: 100px;
+    height: 50px;
+    border: none;
+    border-radius: 6px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    background: #eb7a7a;
+    color: white;
+    transition: all 0.2s ease; 
 }
-.botao:hover{
-    box-shadow: 0 0 15px #4dff7a;
-    transform: scale(1.1);
+
+.botaum:hover{
+    box-shadow: 0 0 15px #ff4d4d;
+    background-color: #d34444;
+    transform: scale(1.1, 1.1);
 }
+
+@media screen and (max-width: 768px) {
+    #lista li{
+        width: 100%;
+        flex-direction: column;
+    }
+    .table {
+        transform: translateY();
+    }
+}
+
+@media screen and (max-width: 620px) {
+    .banner button {
+        transition: ease-in-out .2s;
+        font-size: 15px;
+    }
+    .table {
+        transform: scaleX(80%);
+    }
+    #Cardapio{
+        justify-content: center;
+    }
+}
+

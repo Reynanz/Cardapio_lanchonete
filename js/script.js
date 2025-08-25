@@ -25,3 +25,16 @@ function validation() {
         alert("Pedido feito com sucesso!")
     }
 }
+
+function increment(btn){
+    let quantidade = btn.parentElement.querySelector("input[type=number]");
+    quantidade.value = parseInt(quantidade.value) + 1;
+    return; 
+}
+function decrement(btn){
+    let quantidade = btn.parentElement.querySelector("input[type=number]");
+    quantidade.value = Math.max(0, parseInt(quantidade.value)-1);
+    return; 
+}
+
+
