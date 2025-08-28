@@ -50,21 +50,28 @@ function decrement(btn){
 }
 
 function somaTotal() {
-    let linhas = document.querySelectorAll("tr"); 
+    let cardapio = document.getElementById("Cardapio");
+    let linhas = cardapio.querySelectorAll("tr"); 
     let totalGeral = 0;
+
+    let resumo = document.getElementById("resumo");
+    let tabela = resumo.querySelector("tbody");
+    tabela.innerHTML = "";
 
     linhas.forEach(pizza => {
         let selecionado = pizza.querySelector("input[type=checkbox]");
         let quantidade = pizza.querySelector("input[type=number]");
         let precoEl = pizza.querySelector(".preco");
+        let p = pizza.querySelector(".pizzaname");
 
         if (selecionado && quantidade && precoEl) {
             let preco = parseFloat(precoEl.getAttribute("value"));
             let subtotal = parseInt(quantidade.value) * preco;
 
 
-            if (selecionado.checked) {
+            if (selecionado.checked && quantidade.value > 0) {
                 totalGeral += subtotal;
+                resumoPedido(p.textContent, subtotal);
             }
         }
     });
@@ -72,4 +79,18 @@ function somaTotal() {
  
     let total = document.getElementById("total");
     total.textContent = "R$ " + totalGeral.toFixed(2).replace(".", ",");
+}
+
+function resumoPedido(nome, valor){
+    let resumo = document.getElementById("resumo");
+    let tabela = resumo.querySelector("tbody");
+    let linha = document.createElement("tr");
+    let nomePizza = document.createElement("td");
+    let valorPizza = document.createElement("td");
+
+    nomePizza.textContent = nome;
+    valorPizza.textContent = "R$ " + valor.toFixed(2).replace(".", ",");
+
+    linha.append(nomePizza, valorPizza);
+    tabela.append(linha);
 }

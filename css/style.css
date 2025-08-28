@@ -53,7 +53,7 @@ textarea{
     transition: all 0.3s ease;
 }
 
-table {
+.table {
     color: white;
     box-shadow: 3px 3px 4px #504f4f;
     background-color: #d34444;
@@ -165,14 +165,33 @@ th, td {
     transform: scale(1.1, 1.1);
 }
 
+.resumo{
+    background-color: white;
+    border-radius: 15px;
+    width: 400px;
+    justify-items: center;
+    padding: 20px;
+}
+.resumo div{
+    width: 300px;
+    background-color: rgba(238, 235, 235, 0.705);
+    border-radius: 10px;
+}
+.resumo table{
+    font-family: Arial, Helvetica, sans-serif;
+    color: rgba(128, 126, 126, 0.705);
+    background-color: rgba(238, 235, 235, 0.705);
+    border-radius: 10px;
+    width: 100%;
+    text-align: center;
+}
+
 @media screen and (max-width: 768px) {
     #lista li{
         width: 100%;
         flex-direction: column;
     }
-    .table {
-        transform: translateY();
-    }
+
 }
 
 @media screen and (max-width: 620px) {
