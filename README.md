@@ -19,8 +19,6 @@ Bem-vindo ao **Pizzaria da Vila**, o projeto definitivo para quem ama pizza e qu
 
 <div align="center">
   <img src="image/banner.png" alt="Banner" width="600"/>
-  <img src="image/bemvindo.png" alt="Bem-vindo" width="400"/>
-  <img src="image/pizza.png" alt="Pizza" width="400"/>
 </div>
 
 ---
