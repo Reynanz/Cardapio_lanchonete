@@ -14,7 +14,7 @@ body {
     align-items: center;
     gap: 15px;
     padding: 5%;
-    background: linear-gradient(#baf7ba, var(--primary));
+    background: linear-gradient(135deg, #8B0000, #FFD700);
     font-family: Arial, sans-serif;
 }
 
@@ -136,7 +136,7 @@ textarea {
 }
 
 .resumo table {
-    width: 100%;
+    width: 100% !important;
     border-radius: 10px;
     background: #eee;
     color: #666;

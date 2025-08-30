@@ -116,33 +116,24 @@ function somaTotal() {
 // Validação form
 document.getElementById("form").addEventListener("submit", e => {
     e.preventDefault();
+    const telefoneValido = /^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/;
     let nome = document.getElementById("nome").value.trim();
     let telefone = document.getElementById("telefone").value.trim();
+    let endereco = document.getElementById("endereco").value.trim();
     if (total < 1) {
-        Swal.fire({
-            title: 'Erro!',
-            text: 'Por favor faça um pedido!',
-            icon: 'error',
-            confirmButtonText: 'Ok'
-        });
+        showAlert("Erro!","error","<p>Por favor faça um pedido!</p>");
         return;
     }
     if (!nome) {
-        Swal.fire({
-            title: 'Erro!',
-            text: 'Por favor insira um nome!',
-            icon: 'error',
-            confirmButtonText: 'Ok'
-        });
+        showAlert("Erro!","error","<p>Por favor insira um nome!</p>");
         return;
     }
-    if (!/^\d{11}$/.test(telefone)) {
-        Swal.fire({
-            title: 'Erro!',
-            text: 'Por favor insira um telefone válido (11 dígitos).',
-            icon: 'error',
-            confirmButtonText: 'Ok'
-        });
+    if (!telefoneValido.test(telefone)) {
+        showAlert("Erro!","error","<p>Por favor insira um telefone válido (ex: (11) 91234-5678).</p>");
+        return;
+    }
+    if (!endereco) {
+        showAlert("Erro!","error","<p>Por favor insira um endereço!</p>");
         return;
     }
 
@@ -151,28 +142,35 @@ document.getElementById("form").addEventListener("submit", e => {
 });
 
 function confirmarPedido() {
+    let nome = document.getElementById("nome").value.trim();
+    let endereco = document.getElementById("endereco").value.trim();
+    let res = document.getElementById("resumo");
+    let pedidos = res.querySelector("tbody");
     Swal.fire({
-        title: 'Confirmação do Pedido',
-        text: 'Deseja confirmar seu pedido?',
+        title: 'Confirmação do Pedido!',
+        html: `
+        <p>Deseja confirmar seu pedido?</p>
+        <table class='resumo'>${pedidos.innerHTML}</table>
+        <p>Total: R$${total.toFixed(2).replace('.' , ',')}</p>`,
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Confirmar',
-        cancelButtonText: 'Cancelar'}).then((result) => {
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
             if (result.isConfirmed) {
-                Swal.fire({
-                    title: 'Pedido Confirmado!',
-                    text: `Total: R$${total.toFixed(2).replace(".", ",")}`,
-                    icon: 'success',
-                    confirmButtonText: 'Fechar'
-                });
+                showAlert("Pedido Enviado!", "success",(`<p>Cliente: ${nome}</p>
+                <p>Endereço: ${endereco}</p>
+                <p>Tempo de espera: 30m</p>`));
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-                Swal.fire({
-                    title: 'Pedido Cancelado!',
-                    text: 'Que pena, você cancelou o pedido!',
-                    icon: 'error',
-                    confirmButtonText: 'Fechar'
-                });
+                showAlert("Pedido Cancelado!", "error", "Que pena! Você cancelou o pedido.");
             }
         })
+}
 
+function showAlert(titulo, icone, mensagem) {
+    Swal.fire({
+        title: titulo,
+        icon: icone,
+        html: mensagem
+    });
 }
