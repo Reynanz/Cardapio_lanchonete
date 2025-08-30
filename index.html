@@ -1,172 +1,64 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
-    <script src="js/script.js" ></script>
     <title>Pizzaria da Vila</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-    <div class="navbar">
-    </div>
+    <!-- Navbar -->
+    <div class="navbar"></div>
 
+    <!-- Banner -->
     <div class="banner">
-        <img src="image/bemvindo.png  " alt="Banner pizza">
-        <button class="cta" onclick="document.getElementById('sec').scrollIntoView({behavior: 'smooth'})">Fazer pedido</button>
+        <img src="image/bemvindo.png" alt="Banner pizza">
+        <button class="cta" onclick="document.getElementById('sec').scrollIntoView({behavior: 'smooth'})">
+            Fazer pedido
+        </button>
     </div>
-    
+
+    <!-- Cardápio -->
     <section id="Cardapio">
-        <table class="table">    
-            <h1 style="justify-self: center;">Cardápio</h1>
-
+        <h1>Cardápio</h1>
+        <table class="table">
             <thead>
-                <th>Sabores</th>
-                <th>Preço</th>
-                <th>Escolha</th>
-                <th colspan="2">Quantidade</th>
+                <tr>
+                    <th>Sabores</th>
+                    <th>Preço</th>
+                    <th>Quantidade</th>
+                </tr>
             </thead>
-
-            <tbody>
-                <tr>
-                    <td class="pizzaname">Pizza de Quatro queijos</td>
-                        <td class="preco" value="39.90">R$39,90</td>
-                        <td><input type="checkbox" ></td>
-                        <td>
-                            <input type="number" value="0" min="0">
-                            <button onclick="increment(this)">+</button>
-                            <button onclick="decrement(this)">-</button>
-                        </td>
-                </tr>
-                <tr>
-                    <td class="pizzaname">Pizza de frango com catupiry</td>
-                        <td class="preco" value="37.90">R$37,90</td>
-                        <td><input type="checkbox" ></td>
-                        <td>
-                            <input type="number" value="0" min="0">
-                            <button onclick="increment(this)">+</button>
-                            <button onclick="decrement(this)">-</button>
-                        </td>
-                </tr>
-                <tr>
-                    <td class="pizzaname">Pizza portuguesa</td>
-                        <td class="preco" value="38.90">R$38,90</td>
-                        <td><input type="checkbox" ></td>
-                        <td>
-                            <input type="number" value="0" min="0">
-                            <button onclick="increment(this)">+</button>
-                            <button onclick="decrement(this)">-</button>
-                        </td>
-                </tr>
-                <tr>
-                    <td>Pizza de frango com bacon</td>
-                        <td class="preco" value="41.90">R$41,90</td>
-                        <td><input type="checkbox" ></td>
-                        <td>
-                            <input type="number" value="0" min="0">
-                            <button onclick="increment(this)">+</button>
-                            <button onclick="decrement(this)">-</button>
-                        </td>
-                </tr>
-                <tr>
-                    <td class="pizzaname">Pizza de marguerita</td>
-                        <td class="preco" value="39.90">R$39,90</td>
-                        <td><input type="checkbox" ></td>
-                        <td>
-                            <input type="number" value="0" min="0">
-                            <button onclick="increment(this)">+</button>
-                            <button onclick="decrement(this)">-</button>
-                        </td>
-                </tr>
-                <tr>
-                    <td class="pizzaname">Pizza de calabresa</td>
-                        <td class="preco" value="38.90">R$38,90</td>
-                        <td><input type="checkbox" ></td>
-                        <td>
-                            <input type="number" value="0" min="0">
-                            <button onclick="increment(this)">+</button>
-                            <button onclick="decrement(this)">-</button>
-                        </td>
-                </tr>
-                <tr>
-                    <td class="pizzaname">Pizza Pepperoni</td>
-                        <td class="preco" value="39.90">R$39,90</td>
-                        <td><input type="checkbox" ></td>
-                        <td>
-                            <input type="number" value="0" min="0">
-                            <button onclick="increment(this)">+</button>
-                            <button onclick="decrement(this)">-</button>
-                        </td>
-                </tr>
-                <tr>
-                    <td class="pizzaname">Pizza de peito de peru</td>
-                        <td class="preco" value="40.90">R$40,90</td>
-                        <td><input type="checkbox" ></td>
-                        <td>
-                            <input type="number" value="0" min="0">
-                            <button onclick="increment(this)">+</button>
-                            <button onclick="decrement(this)">-</button>
-                        </td>
-                </tr>
-                <tr>
-                    <td class="pizzaname">Pizza de brigadeiro</td>
-                        <td class="preco" value="42.90">R$42,90</td>
-                        <td><input type="checkbox" class="check"></td>
-                        <td>
-                            <input type="number" value="0" min="0">
-                            <button onclick="increment(this)">+</button>
-                            <button onclick="decrement(this)">-</button>
-                        </td>
-                </tr>
-                <tr>
-                    <td class="pizzaname">Pizza de chocolate branco</td>
-                        <td class="preco" value="39.90">R$39,90</td>
-                        <td><input type="checkbox" ></td>
-                        <td>
-                            <input type="number" value="0" min="0">
-                            <button onclick="increment(this)">+</button>
-                            <button onclick="decrement(this)">-</button>
-                        </td>
-                </tr>
-                <tr>
-                    <td class="pizzaname">Pizza de sorvete </td>
-                        <td class="preco" value="39.25">R$39,25</td>
-                        <td><input type="checkbox"></td>
-                        <td>
-                            <input type="number" value="0" min="0">
-                            <button onclick="increment(this)">+</button>
-                            <button onclick="decrement(this)">-</button>
-                        </td>
-                </tr>
-            </tbody>
-            <tfoot >
-                <tr style="background-color: #d34444;">
-                    <td>TOTAL:</td>
-                    <td colspan="3" id="total">R$</td>
-                </tr>
-            </tfoot>
+            <tbody id="tabela-cardapio"></tbody>
         </table>
+    </section>
 
-    </section> 
+    <!-- Resumo -->
     <div class="resumo" id="resumo">
         <h1>Resumo do pedido</h1>
         <table>
             <thead>
-                <th>Sabores</th>
-                <th>Preço</th>
-            </thead>
-            <tbody>
                 <tr>
-                    <td>pizza</td>
-                    <td>R$0,00</td>
+                    <th>Sabores</th>
+                    <th>Preço</th>
                 </tr>
-            </tbody>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+                <tr class="total-row">
+                    <td>TOTAL:</td>
+                    <td id="total">R$ 0,00</td>
+                </tr>
+            </tfoot>
         </table>
     </div>
+
+    <!-- Formulário -->
     <section id="sec">
         <h1>Faça seu pedido</h1>
-        <form method="post" id="form" action="" >
-
+        <form id="form">
             <label>Nome:</label>
             <input type="text" id="nome" required>
 
@@ -174,15 +66,18 @@
             <input type="tel" id="telefone" required>
 
             <label>Endereço:</label>
-            <input type="text" id="endereço" required>
+            <input type="text" id="endereco" required>
 
             <label>Observação:</label>
             <textarea id="obs"></textarea>
 
-            <button type="submit" class="botaum" onclick="validation()">Enviar</button>
-
-        </form>   
+            <button type="submit" class="btn">Enviar</button>
+        </form>
     </section>
+
+    <script src="js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </body>
+
 </html>
-    
