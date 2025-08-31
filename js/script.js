@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let input = document.createElement("input");
         input.type = "number";
         input.min = 0;
-        input.value = 1;
+        input.value = 0;
 
         let btnContainer = document.createElement("div");
         btnContainer.classList.add("botoes");
