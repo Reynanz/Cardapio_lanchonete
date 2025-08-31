@@ -136,7 +136,7 @@ textarea {
 }
 
 .resumo table {
-    width: 100% !important;
+    width: 100% ;
     border-radius: 10px;
     background: #eee;
     color: #666;
