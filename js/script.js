@@ -1,22 +1,23 @@
 // ===== Dados das pizzas =====
 const pizzas = [
-    { id: 1, nome: "Pizza de Quatro Queijos", preco: 39.90 },
-    { id: 2, nome: "Pizza de Frango com Catupiry", preco: 37.90 },
-    { id: 3, nome: "Pizza Portuguesa", preco: 38.90 },
-    { id: 4, nome: "Pizza de Frango com Bacon", preco: 41.90 },
-    { id: 5, nome: "Pizza de Marguerita", preco: 39.90 },
-    { id: 6, nome: "Pizza de Calabresa", preco: 38.90 },
-    { id: 7, nome: "Pizza de Pepperoni", preco: 39.90 },
-    { id: 8, nome: "Pizza de Peito de Peru", preco: 40.90 },
-    { id: 9, nome: "Pizza de Brigadeiro", preco: 42.90 },
-    { id: 10, nome: "Pizza de Chocolate Branco", preco: 39.90 },
-    { id: 11, nome: "Pizza de Sorvete", preco: 39.25 },
-    { id: 12, nome: "Coca-cola 2L", preco: 16.00 },
-    { id: 13, nome: "Sprite Limão 2L", preco: 14.50 },
-    { id: 14, nome: "Fanta 2L", preco: 14.50 },
-    { id: 15, nome: "Coca-cola Lata 350ml", preco: 7.90 },
-    { id: 16, nome: "Sprite Limão Lata 350ml", preco: 5.00 },
-    { id: 17, nome: "Fanta Lata 350ml", preco: 5.00 }
+    { id: 0, nome: "X-Burguer", preco: 12.00 },
+    { id: 1, nome: "Cachorro-quente", preco: 5.00 },
+    { id: 2, nome: "Pastel de Frango", preco: 5.00 },
+    { id: 3, nome: "Pastel de Carne", preco: 5.00 },
+    { id: 4, nome: "Pastel de Queijo", preco: 5.00 },
+    { id: 5, nome: "Pastel de Pizza", preco: 5.00 },
+    { id: 6, nome: "Coxinha", preco: 4.00 },
+    { id: 7, nome: "Calafrango", preco: 4.00 },
+    { id: 8, nome: "Enroladinho de Salsicha", preco: 4.00 },
+    { id: 9, nome: "Salgado de Charque", preco: 4.00 },
+    { id: 10, nome: "Bolinho de Presunto e Queijo", preco: 4.00 },
+    { id: 11, nome: "Torta de Frango", preco: 5.00 },
+    { id: 12, nome: "Bolo de Ovos", preco: 4.00 },
+    { id: 13, nome: "Bolo de Leite", preco: 4.00 },
+    { id: 14, nome: "Coca-cola 1L", preco: 6.00 },
+    { id: 15, nome: "Guaraná 1L", preco: 6.00 },
+    { id: 16, nome: "Coca-cola Lata 350ml", preco: 4.00 },
+    { id: 17, nome: "Guaraná Lata 350ml", preco: 4.00 }
 ];
 
 let total = 0;
@@ -44,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let input = document.createElement("input");
         input.type = "number";
         input.min = 0;
-        input.value = 0;
+        input.value = 1;
 
         let btnContainer = document.createElement("div");
         btnContainer.classList.add("botoes");
@@ -127,14 +128,14 @@ function somaTotal() {
             trResumo.dataset.id = pizza.id;
 
             let tdNome = document.createElement("td");
-            tdNome.textContent = `${pizza.nome} (x${qtd})`;
+            tdNome.textContent = `${pizza.nome} x${qtd}`;
 
             let tdPreco = document.createElement("td");
             let subtotal = pizza.preco * qtd;
             tdPreco.textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
 
             let tdExcluir = document.createElement("td");
-            tdExcluir.innerHTML = `<button class="excluir">x</button>`;
+            tdExcluir.innerHTML = `<button class="excluir">🗑️</button>`;
 
             trResumo.append(tdNome, tdPreco, tdExcluir);
             resumo.appendChild(trResumo);
@@ -181,13 +182,14 @@ document.getElementById("form").addEventListener("submit", e => {
 function confirmarPedido() {
     const nome = document.getElementById("nome").value.trim();
     const endereco = document.getElementById("endereco").value.trim();
-    const resumo = document.querySelector("#resumo tbody");
+    let obs = document.getElementById("obs").value.trim();
 
     Swal.fire({
         title: 'Confirmação do Pedido!',
         html: `
             <p>Deseja confirmar seu pedido?</p>
             ${gerarResumoParaAlerta()}
+            <p style='font-size:14px;'>Obs: *${obs}*</p>
             <p>Total: R$ ${total.toFixed(2).replace('.', ',')}</p>
         `,
         icon: 'question',
@@ -224,7 +226,7 @@ function getData() {
 function gerarResumoParaAlerta() {
     const resumo = document.querySelector("#resumo tbody");
     let html = "<table style='font-size:14px; text-align:justify; max-width:100%;'>";
-    
+
     resumo.querySelectorAll("tr").forEach(tr => {
         const nomeQtd = tr.querySelector("td:first-child").textContent;
         const preco = tr.querySelector("td:nth-child(2)").textContent;
@@ -234,4 +236,3 @@ function gerarResumoParaAlerta() {
     html += "</table>";
     return html;
 }
-

@@ -1,3 +1,4 @@
+/* Variáveis de cor */
 :root {
     --primary: #d34444;
     --secondary: #4CAF50;
@@ -7,10 +8,11 @@
     --bg-gray: #6b6b6b;
     --shadow: #504f4f;
 }
-
+/* Estilos globais */
 body {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     gap: 15px;
     padding: 5%;
@@ -21,11 +23,9 @@ body {
 h1 {
     text-align: center;
 }
-
 label {
     font-size: large;
 }
-
 textarea {
     height: 50px;
 }
@@ -64,6 +64,7 @@ textarea {
     outline: none;
 }
 
+/*Remove setinhas do input number*/
 .table input[type="number"]::-webkit-inner-spin-button,
 .table input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -84,11 +85,17 @@ textarea {
 .table button:hover {
     background: #45a049;
 }
+.table button:nth-last-child(1) {
+    background: var(--primary);
+}
+.table button:nth-last-child(1):hover {
+    background: #d30505;
+}
 
+/* Linhas de cores alternadas */
 .table tr:nth-child(odd) {
     background: var(--bg-dark);
 }
-
 .table tr:nth-child(even) {
     background: var(--bg-gray);
 }
@@ -136,7 +143,7 @@ textarea {
 }
 
 .resumo table {
-    width: 100% ;
+    width: 100%;
     border-radius: 10px;
     background: #eee;
     color: #666;
@@ -147,6 +154,18 @@ textarea {
 .total-row {
     color: blueviolet;
     font-weight: bold;
+}
+
+.excluir{
+    border: none;
+    color: red;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.excluir:hover {
+    background: #cfcfcf;
+    transform: scale(1.2);
 }
 
 /* Form */
@@ -195,11 +214,33 @@ textarea {
     transform: scale(1.1);
 }
 
-@media (max-width: 480px) {
-    body {
-        padding: 5%;
-    }
+/* Carrinho */
+.carrinho {
+    display: flex;
+    position: fixed;
+    justify-content:center;
+    border-radius: 50%;
+    background: #8d6c88bd;
+    width: 70px;
+    height: 70px;
+    bottom: 20px;
+    left: 20px;
+}
+.carrinho button {
+    
+    font-size: 30px;
+    border: none;
+    background: none;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-shadow: 0 0 5px var(--shadow);
+    width: 100%;
+}
 
+
+/* Responsividade */
+@media (max-width: 480px) {
     .table {
         font-size: 15px;
     }
@@ -215,10 +256,6 @@ textarea {
 }
 
 @media (min-width: 481px) and (max-width: 648px) {
-    body {
-        padding: 5%;
-    }
-
     .table {
         font-size: 17px;
     }
@@ -234,10 +271,6 @@ textarea {
 }
 
 @media (min-width: 649px) and (max-width: 1023px) {
-    body {
-        padding: 4%;
-    }
-
     .table {
         font-size: 18px;
     }
@@ -253,10 +286,6 @@ textarea {
 }
 
 @media (min-width: 1024px) {
-    body {
-        padding: 3%;
-    }
-
     .table {
         font-size: 20px;
     }
