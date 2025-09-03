@@ -1,9 +1,12 @@
-// ===== Variáveis globais =====
-var total = 0;
-var qtdItens = 0;
-var nome = document.getElementById("nome");
-var endereco = document.getElementById("endereco");
-var obs = document.getElementById("obs");
+// ===== Variáveis =====
+let total = 0;
+let qtdItens = 0;
+const nome = document.getElementById("nome");
+const endereco = document.getElementById("endereco");
+const obs = document.getElementById("obs");
+const resumoTbody = document.querySelector("#resumo tbody");
+const carrinhoContainer = document.getElementById("carrinho");
+const btnCarrinho = document.getElementById("btn-carrinho");
 
 // ===== Dados dos lanches =====
 const lanches = [
@@ -27,212 +30,174 @@ const lanches = [
     { id: 17, nome: "Guaraná Lata 350ml", preco: 4.00 }
 ];
 
+// Categorias
+const categorias = {
+    "Lanches": [0],
+    "Pastéis": [1,2,3,4,5],
+    "Salgados": [6,7,8,9],
+    "Tortas e Bolos": [10,11,12,13],
+    "Refrigerantes": [14,15,16,17]
+};
+
 // ===== Inicialização =====
 document.addEventListener("DOMContentLoaded", () => {
-    const tabela = document.getElementById("tabela-cardapio");
-    const resumo = document.querySelector("#resumo tbody");
-
-    // Monta tabela do cardápio
-    lanches.forEach(lanche => {
-        let linha = document.createElement("tr");
-        linha.dataset.id = lanche.id; // ID único
-
-        let trCategoria = document.createElement("tr");
-        let thnomeCategoria = document.createElement("th");
-
-        thnomeCategoria.classList.add("categorias");
-        thnomeCategoria.colSpan = 3;
-
-        let tdNome = document.createElement("td");
-        tdNome.classList.add("lanchename");
-        tdNome.dataset.quantidade = 0;
-        tdNome.textContent = lanche.nome;
-
-        let tdPreco = document.createElement("td");
-        tdPreco.classList.add("preco");
-        tdPreco.dataset.preco = lanche.preco;
-        tdPreco.textContent = `R$ ${lanche.preco.toFixed(2).replace('.', ',')}`;
-
-        let btnContainer = document.createElement("div");
-        btnContainer.classList.add("botoes");
-
-        let btnAdd = document.createElement("button");
-        btnAdd.textContent = "Adicionar ao carrinho";
-        btnAdd.onclick = () => addToCart(lanche.id);
-
-        btnContainer.append(btnAdd);
-
-        linha.append(tdNome, tdPreco, btnContainer);
-        tabela.appendChild(linha);
-
-        // Adiciona categorias
-        switch (lanche.nome) {
-            case "Cachorro-quente":
-                thnomeCategoria.textContent = "Pastéis";
-                trCategoria.append(thnomeCategoria);
-                tabela.appendChild(trCategoria);
-                break;
-            case "Pastel de Pizza":
-                thnomeCategoria.textContent = "Salgados";
-                trCategoria.append(thnomeCategoria);
-                tabela.appendChild(trCategoria);
-                break;
-            case "Bolinho de Presunto e Queijo":
-                thnomeCategoria.textContent = "Tortas e Bolos";
-                trCategoria.append(thnomeCategoria);
-                tabela.appendChild(trCategoria);
-                break;
-            case "Bolo de Leite":
-                thnomeCategoria.textContent = "Refrigerantes";
-                trCategoria.append(thnomeCategoria);
-                tabela.appendChild(trCategoria);
-                break;
-            default:
-                break;
-        }
-
-    });
-
-    // Carrega dados do usuário do localStorage
-    let usuario = getData();
-    if (usuario && usuario.name && usuario.address) {
-        nome.value = usuario.name;
-        endereco.value = usuario.address;
-    }
-
-    // Event delegation para excluir do resumo
-    resumo.addEventListener("click", e => {
-        if (e.target.classList.contains("excluir")) {
-            let trResumo = e.target.closest("tr");
-            let id = parseInt(trResumo.dataset.id);
-
-            // Zera quantidade no cardápio
-            let linhaCardapio = document.querySelector(`#tabela-cardapio tr[data-id='${id}']`);
-            if (linhaCardapio) {
-                linhaCardapio.querySelector(".lanchename").dataset.quantidade = 0;
-            }
-
-            trResumo.remove();
-            somaTotal();
-        }
-    });
-
-    // Calcula total inicial
-    somaTotal();
+    montarCardapio();
+    carregarUsuario();
+    btnCarrinho.addEventListener("click", toggleCarrinho);
+    document.getElementById("form").addEventListener("submit", enviarPedido);
 });
 
-// ===== Adiciona ao carrinho =====
-function addToCart(id) {
-    let linha = document.querySelector(`#tabela-cardapio tr[data-id='${id}']`);
-    let lancheqtd = linha.querySelector(".lanchename");
-    lancheqtd.dataset.quantidade = parseInt(lancheqtd.dataset.quantidade || 0) + 1;
-    somaTotal();
+// ===== Funções =====
+
+// Monta o cardápio com categorias
+function montarCardapio() {
+    const tabela = document.getElementById("tabela-cardapio");
+    tabela.innerHTML = "";
+
+    for (let cat in categorias) {
+        let trCat = document.createElement("tr");
+        let thCat = document.createElement("th");
+        thCat.colSpan = 3;
+        thCat.textContent = cat;
+        thCat.classList.add("categorias");
+        trCat.appendChild(thCat);
+        tabela.appendChild(trCat);
+
+        categorias[cat].forEach(id => {
+            let lanche = lanches[id];
+            let tr = document.createElement("tr");
+            tr.dataset.id = lanche.id;
+
+            let tdNome = document.createElement("td");
+            tdNome.classList.add("lanchename");
+            tdNome.dataset.quantidade = 0;
+            tdNome.textContent = lanche.nome;
+
+            let tdPreco = document.createElement("td");
+            tdPreco.classList.add("preco");
+            tdPreco.dataset.preco = lanche.preco;
+            tdPreco.textContent = `R$ ${lanche.preco.toFixed(2).replace('.', ',')}`;
+
+            let tdBtn = document.createElement("td");
+            let btnAdd = document.createElement("button");
+            btnAdd.textContent = "Adicionar ao carrinho";
+            btnAdd.onclick = () => addToCart(lanche.id);
+            tdBtn.appendChild(btnAdd);
+
+            tr.append(tdNome, tdPreco, tdBtn);
+            tabela.appendChild(tr);
+        });
+    }
 }
 
-// ===== Soma o total =====
+// Adiciona item ao carrinho
+function addToCart(id) {
+    const linha = document.querySelector(`#tabela-cardapio tr[data-id='${id}']`);
+    const lancheQtd = linha.querySelector(".lanchename");
+    lancheQtd.dataset.quantidade = parseInt(lancheQtd.dataset.quantidade || 0) + 1;
+    somaTotal();
+    montarResumo();
+}
+
+// Soma total
 function somaTotal() {
     total = 0;
     qtdItens = 0;
-    
+
     lanches.forEach(lanche => {
-        let linhaCardapio = document.querySelector(`#tabela-cardapio tr[data-id='${lanche.id}']`);
-        let qtd = parseInt(linhaCardapio.querySelector(".lanchename").dataset.quantidade || 0); 
-        
+        const linha = document.querySelector(`#tabela-cardapio tr[data-id='${lanche.id}']`);
+        const qtd = parseInt(linha.querySelector(".lanchename").dataset.quantidade || 0);
         if (qtd > 0) {
             qtdItens += 1;
-            let subtotal = lanche.preco * qtd;
-            total += subtotal;
+            total += lanche.preco * qtd;
         }
     });
 
     document.getElementById("total").textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
-    montarResumo();
 }
 
-// ===== Monta o resumo =====
+// Monta resumo
 function montarResumo() {
-    const resumo = document.querySelector("#resumo tbody");
-    resumo.innerHTML = "";
+    resumoTbody.innerHTML = "";
 
     lanches.forEach(lanche => {
-        let linhaCardapio = document.querySelector(`#tabela-cardapio tr[data-id='${lanche.id}']`);
-        let qtd = parseInt(linhaCardapio.querySelector(".lanchename").dataset.quantidade || 0); 
-        
+        const linha = document.querySelector(`#tabela-cardapio tr[data-id='${lanche.id}']`);
+        const qtd = parseInt(linha.querySelector(".lanchename").dataset.quantidade || 0);
         if (qtd > 0) {
-            let trResumo = document.createElement("tr");
-            trResumo.dataset.id = lanche.id;
+            const tr = document.createElement("tr");
+            tr.dataset.id = lanche.id;
 
-            let tdNome = document.createElement("td");
+            const tdNome = document.createElement("td");
             tdNome.textContent = `${lanche.nome} x${qtd}`;
 
-            let tdPreco = document.createElement("td");
-            let subtotal = lanche.preco * qtd;
-            tdPreco.textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
+            const tdPreco = document.createElement("td");
+            tdPreco.textContent = `R$ ${(lanche.preco * qtd).toFixed(2).replace('.', ',')}`;
 
-            let tdExcluir = document.createElement("td");
+            const tdExcluir = document.createElement("td");
             tdExcluir.innerHTML = `<button class="excluir">🗑️</button>`;
+            tdExcluir.querySelector("button").onclick = () => removeItem(lanche.id);
 
-            trResumo.append(tdNome, tdPreco, tdExcluir);
-            resumo.appendChild(trResumo);
+            tr.append(tdNome, tdPreco, tdExcluir);
+            resumoTbody.appendChild(tr);
         }
     });
 }
 
-// ===== Formulário =====
-document.getElementById("form").addEventListener("submit", e => {
+// Remove item
+function removeItem(id) {
+    const linha = document.querySelector(`#tabela-cardapio tr[data-id='${id}']`);
+    linha.querySelector(".lanchename").dataset.quantidade = 0;
+    montarResumo();
+    somaTotal();
+}
+
+// Toggle carrinho
+function toggleCarrinho() {
+    if (carrinhoContainer.classList.contains("carrinho-fechado")) {
+        carrinhoContainer.classList.replace("carrinho-fechado", "carrinho-aberto");
+        btnCarrinho.textContent = "❌";
+        montarResumo();
+    } else {
+        btnCarrinho.textContent = "🛒";
+        carrinhoContainer.classList.replace("carrinho-aberto", "carrinho-fechado");
+    }
+}
+
+// Salva e carrega usuário
+function carregarUsuario() {
+    const usuario = JSON.parse(localStorage.getItem('pedido')) || {};
+    if (usuario.name) nome.value = usuario.name;
+    if (usuario.address) endereco.value = usuario.address;
+}
+function salvarUsuario() {
+    localStorage.setItem('pedido', JSON.stringify({ name: nome.value.trim(), address: endereco.value.trim() }));
+}
+
+// Envia pedido
+function enviarPedido(e) {
     e.preventDefault();
+    if (total < 1) return Swal.fire("Erro!", "Por favor faça um pedido!", "error");
+    if (!nome.value.trim()) return Swal.fire("Erro!", "Por favor insira um nome!", "error");
+    if (!endereco.value.trim()) return Swal.fire("Erro!", "Por favor insira um endereço!", "error");
 
-    if (total < 1) {
-        showAlert("Erro!", "error", "<p>Por favor faça um pedido!</p>");
-        return;
-    }
-    if (!nome.value.trim()) {
-        showAlert("Erro!", "error", "<p>Por favor insira um nome!</p>");
-        return;
-    }
-    if (!endereco.value.trim()) {
-        showAlert("Erro!", "error", "<p>Por favor insira um endereço!</p>");
-        return;
-    }
-
-    saveData({ name: nome.value.trim(), address: endereco.value.trim() });
-    pedirnoWhats()
-});
-
-// ===== Funções auxiliares =====
-
-// Exibe alerta com SweetAlert2
-function showAlert(titulo, icone, mensagem) {
-    Swal.fire({ title: titulo, icon: icone, html: mensagem });
+    salvarUsuario();
+    abrirWhatsApp();
 }
-// Salva dados no localStorage
-function saveData(dados) {
-    localStorage.setItem('pedido', JSON.stringify(dados));
-}
-// Recupera dados do localStorage
-function getData() {
-    const dados = localStorage.getItem('pedido');
-    return dados ? JSON.parse(dados) : null;
-}
-// Gera o texto do pedido
+
+// Gera texto do pedido
 function gerarPedido() {
-    const resumo = document.querySelector("#resumo tbody");
     let ped = '';
-    resumo.querySelectorAll("tr").forEach(tr => {
-        let nomeQtd = tr.querySelector("td:first-child").textContent;
-        let preco = tr.querySelector("td:nth-child(2)").textContent;
+    resumoTbody.querySelectorAll("tr").forEach(tr => {
+        const nomeQtd = tr.querySelector("td:first-child").textContent;
+        const preco = tr.querySelector("td:nth-child(2)").textContent;
         ped += `\n- *${nomeQtd}* ${preco}\n`;
     });
-    return ped
+    return ped;
 }
-// Abre o WhatsApp com o pedido
-function pedirnoWhats() {
-    let pedido = gerarPedido()
-    let mensagem = `Cliente: *${nome.value.trim()}*
-    \nOlá, quero pedir:
-    \n${pedido}
-    \nTotal: *R$${total.toFixed(2).replace('.', ',')}*
-    \nEndereço: ${endereco.value.trim()}
-    \n*Obs: ${obs.value.trim()}*`;
+
+// Abre WhatsApp
+function abrirWhatsApp() {
+    const pedido = gerarPedido();
+    const mensagem = `Cliente: *${nome.value.trim()}*\nOlá, quero pedir:\n${pedido}\nTotal: *R$${total.toFixed(2).replace('.', ',')}*\nEndereço: ${endereco.value.trim()}\n*Obs: ${obs.value.trim()}*`;
     window.open(`https://wa.me/5579996805818?text=${encodeURIComponent(mensagem)}`);
 }

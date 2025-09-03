@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pizzaria da Vila</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
-    
-    <!--<button onclick="pedirnoWhats()">Pedir no Whatsapp</button>-->
-    <!-- Banner --> 
+
+    <!-- Banner -->
     <div class="banner">
         <img src="image/bemvindo.png" alt="Banner pizza">
         <button class="cta" onclick="document.getElementById('sec').scrollIntoView({behavior: 'smooth'})">
@@ -20,40 +17,19 @@
     </div>
 
     <!-- Cardápio -->
-    <section id="Cardapio">
+    <section id="cardapio">
         <h1>Cardápio</h1>
         <table class="table">
-            <tbody id="tabela-cardapio"><tr><th class="categorias" colspan="3">Lanches</th></tr></tbody>
+            <tbody id="tabela-cardapio"></tbody>
         </table>
     </section>
-
-    <!-- Resumo do pedido -->
-    <div class="resumo" id="resumo">
-        <h1>Resumo do pedido</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Sabores</th>
-                    <th>Preço</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-            <tfoot>
-                <tr class="total-row">
-                    <td>TOTAL:</td>
-                    <td id="total">R$ 0,00</td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
 
     <!-- Formulário -->
     <section id="sec">
         <h1>Preencha suas informações</h1>
         <form id="form">
             <label>Nome:</label>
-            <input type="text" id="nome" >
+            <input type="text" id="nome">
 
             <label>Endereço:</label>
             <input type="text" id="endereco">
@@ -65,14 +41,32 @@
         </form>
     </section>
 
-    <div class="carrinho" id="carrinho">
-        <button id="btn_carrinho">🛒</button>
+    <!-- Carrinho -->
+    <div id="carrinho" class="carrinho-fechado">
+        <button id="btn-carrinho">🛒</button>
+        <div class="resumo" id="resumo">
+            <h1>Resumo do pedido</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sabores</th>
+                        <th>Preço</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+                <tfoot>
+                    <tr class="total-row">
+                        <td>TOTAL:</td>
+                        <td id="total">R$ 0,00</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
     </div>
 
-
-    <script src="js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    <script src="js/script.js"></script>
 </body>
-
 </html>
