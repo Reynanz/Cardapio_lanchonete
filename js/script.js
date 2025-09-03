@@ -1,5 +1,12 @@
-// ===== Dados das pizzas =====
-const pizzas = [
+// ===== Variáveis globais =====
+var total = 0;
+var qtdItens = 0;
+var nome = document.getElementById("nome");
+var endereco = document.getElementById("endereco");
+var obs = document.getElementById("obs");
+
+// ===== Dados dos lanches =====
+const lanches = [
     { id: 0, nome: "X-Burguer", preco: 12.00 },
     { id: 1, nome: "Cachorro-quente", preco: 5.00 },
     { id: 2, nome: "Pastel de Frango", preco: 5.00 },
@@ -20,57 +27,77 @@ const pizzas = [
     { id: 17, nome: "Guaraná Lata 350ml", preco: 4.00 }
 ];
 
-let total = 0;
-
 // ===== Inicialização =====
 document.addEventListener("DOMContentLoaded", () => {
     const tabela = document.getElementById("tabela-cardapio");
     const resumo = document.querySelector("#resumo tbody");
 
     // Monta tabela do cardápio
-    pizzas.forEach(pizza => {
+    lanches.forEach(lanche => {
         let linha = document.createElement("tr");
-        linha.dataset.id = pizza.id; // ID único
+        linha.dataset.id = lanche.id; // ID único
+
+        let trCategoria = document.createElement("tr");
+        let thnomeCategoria = document.createElement("th");
+
+        thnomeCategoria.classList.add("categorias");
+        thnomeCategoria.colSpan = 3;
 
         let tdNome = document.createElement("td");
-        tdNome.classList.add("pizzaname");
-        tdNome.textContent = pizza.nome;
+        tdNome.classList.add("lanchename");
+        tdNome.dataset.quantidade = 0;
+        tdNome.textContent = lanche.nome;
 
         let tdPreco = document.createElement("td");
         tdPreco.classList.add("preco");
-        tdPreco.dataset.preco = pizza.preco;
-        tdPreco.textContent = `R$ ${pizza.preco.toFixed(2).replace('.', ',')}`;
-
-        let tdInput = document.createElement("td");
-        let input = document.createElement("input");
-        input.type = "number";
-        input.min = 0;
-        input.value = 1;
+        tdPreco.dataset.preco = lanche.preco;
+        tdPreco.textContent = `R$ ${lanche.preco.toFixed(2).replace('.', ',')}`;
 
         let btnContainer = document.createElement("div");
         btnContainer.classList.add("botoes");
 
-        let btnMais = document.createElement("button");
-        btnMais.textContent = "+";
-        btnMais.onclick = () => increment(pizza.id);
+        let btnAdd = document.createElement("button");
+        btnAdd.textContent = "Adicionar ao carrinho";
+        btnAdd.onclick = () => addToCart(lanche.id);
 
-        let btnMenos = document.createElement("button");
-        btnMenos.textContent = "-";
-        btnMenos.onclick = () => decrement(pizza.id);
+        btnContainer.append(btnAdd);
 
-        btnContainer.append(btnMais, btnMenos);
-        tdInput.append(input, btnContainer);
-
-        linha.append(tdNome, tdPreco, tdInput);
+        linha.append(tdNome, tdPreco, btnContainer);
         tabela.appendChild(linha);
+
+        // Adiciona categorias
+        switch (lanche.nome) {
+            case "Cachorro-quente":
+                thnomeCategoria.textContent = "Pastéis";
+                trCategoria.append(thnomeCategoria);
+                tabela.appendChild(trCategoria);
+                break;
+            case "Pastel de Pizza":
+                thnomeCategoria.textContent = "Salgados";
+                trCategoria.append(thnomeCategoria);
+                tabela.appendChild(trCategoria);
+                break;
+            case "Bolinho de Presunto e Queijo":
+                thnomeCategoria.textContent = "Tortas e Bolos";
+                trCategoria.append(thnomeCategoria);
+                tabela.appendChild(trCategoria);
+                break;
+            case "Bolo de Leite":
+                thnomeCategoria.textContent = "Refrigerantes";
+                trCategoria.append(thnomeCategoria);
+                tabela.appendChild(trCategoria);
+                break;
+            default:
+                break;
+        }
+
     });
 
     // Carrega dados do usuário do localStorage
     let usuario = getData();
-    if (usuario && usuario.name && usuario.phone && usuario.address) {
-        document.getElementById("nome").value = usuario.name;
-        document.getElementById("telefone").value = usuario.phone;
-        document.getElementById("endereco").value = usuario.address;
+    if (usuario && usuario.name && usuario.address) {
+        nome.value = usuario.name;
+        endereco.value = usuario.address;
     }
 
     // Event delegation para excluir do resumo
@@ -82,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Zera quantidade no cardápio
             let linhaCardapio = document.querySelector(`#tabela-cardapio tr[data-id='${id}']`);
             if (linhaCardapio) {
-                linhaCardapio.querySelector("input[type=number]").value = 0;
+                linhaCardapio.querySelector(".lanchename").dataset.quantidade = 0;
             }
 
             trResumo.remove();
@@ -90,48 +117,56 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Listener para inputs de quantidade
-    document.querySelectorAll("#tabela-cardapio input[type=number]").forEach(inp => {
-        inp.addEventListener("change", somaTotal);
-    });
-
     // Calcula total inicial
     somaTotal();
 });
 
-// ===== Controle de quantidade =====
-function increment(id) {
+// ===== Adiciona ao carrinho =====
+function addToCart(id) {
     let linha = document.querySelector(`#tabela-cardapio tr[data-id='${id}']`);
-    let input = linha.querySelector("input[type=number]");
-    input.value = parseInt(input.value || 0) + 1;
+    let lancheqtd = linha.querySelector(".lanchename");
+    lancheqtd.dataset.quantidade = parseInt(lancheqtd.dataset.quantidade || 0) + 1;
     somaTotal();
 }
 
-function decrement(id) {
-    let linha = document.querySelector(`#tabela-cardapio tr[data-id='${id}']`);
-    let input = linha.querySelector("input[type=number]");
-    input.value = Math.max(0, parseInt(input.value || 0) - 1);
-    somaTotal();
-}
-
-// ===== Soma total e resumo =====
+// ===== Soma o total =====
 function somaTotal() {
     total = 0;
+    qtdItens = 0;
+    
+    lanches.forEach(lanche => {
+        let linhaCardapio = document.querySelector(`#tabela-cardapio tr[data-id='${lanche.id}']`);
+        let qtd = parseInt(linhaCardapio.querySelector(".lanchename").dataset.quantidade || 0); 
+        
+        if (qtd > 0) {
+            qtdItens += 1;
+            let subtotal = lanche.preco * qtd;
+            total += subtotal;
+        }
+    });
+
+    document.getElementById("total").textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+    montarResumo();
+}
+
+// ===== Monta o resumo =====
+function montarResumo() {
     const resumo = document.querySelector("#resumo tbody");
     resumo.innerHTML = "";
 
-    pizzas.forEach(pizza => {
-        let linhaCardapio = document.querySelector(`#tabela-cardapio tr[data-id='${pizza.id}']`);
-        let qtd = parseInt(linhaCardapio.querySelector("input[type=number]").value || 0);
+    lanches.forEach(lanche => {
+        let linhaCardapio = document.querySelector(`#tabela-cardapio tr[data-id='${lanche.id}']`);
+        let qtd = parseInt(linhaCardapio.querySelector(".lanchename").dataset.quantidade || 0); 
+        
         if (qtd > 0) {
             let trResumo = document.createElement("tr");
-            trResumo.dataset.id = pizza.id;
+            trResumo.dataset.id = lanche.id;
 
             let tdNome = document.createElement("td");
-            tdNome.textContent = `${pizza.nome} x${qtd}`;
+            tdNome.textContent = `${lanche.nome} x${qtd}`;
 
             let tdPreco = document.createElement("td");
-            let subtotal = pizza.preco * qtd;
+            let subtotal = lanche.preco * qtd;
             tdPreco.textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
 
             let tdExcluir = document.createElement("td");
@@ -139,12 +174,8 @@ function somaTotal() {
 
             trResumo.append(tdNome, tdPreco, tdExcluir);
             resumo.appendChild(trResumo);
-
-            total += subtotal;
         }
     });
-
-    document.getElementById("total").textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
 }
 
 // ===== Formulário =====
@@ -155,84 +186,53 @@ document.getElementById("form").addEventListener("submit", e => {
         showAlert("Erro!", "error", "<p>Por favor faça um pedido!</p>");
         return;
     }
-
-    const telefoneValido = /^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/;
-    let nome = document.getElementById("nome").value.trim();
-    let telefone = document.getElementById("telefone").value.trim();
-    let endereco = document.getElementById("endereco").value.trim();
-
-    if (!nome) {
+    if (!nome.value.trim()) {
         showAlert("Erro!", "error", "<p>Por favor insira um nome!</p>");
         return;
     }
-    if (!telefoneValido.test(telefone)) {
-        showAlert("Erro!", "error", "<p>Por favor insira um telefone válido (ex: (11) 91234-5678).</p>");
-        return;
-    }
-    if (!endereco) {
+    if (!endereco.value.trim()) {
         showAlert("Erro!", "error", "<p>Por favor insira um endereço!</p>");
         return;
     }
 
-    saveData({ name: nome, phone: telefone, address: endereco });
-    confirmarPedido();
+    saveData({ name: nome.value.trim(), address: endereco.value.trim() });
+    pedirnoWhats()
 });
 
-// ===== Confirmação do pedido =====
-function confirmarPedido() {
-    const nome = document.getElementById("nome").value.trim();
-    const endereco = document.getElementById("endereco").value.trim();
-    let obs = document.getElementById("obs").value.trim();
-
-    Swal.fire({
-        title: 'Confirmação do Pedido!',
-        html: `
-            <p>Deseja confirmar seu pedido?</p>
-            ${gerarResumoParaAlerta()}
-            <p style='font-size:14px;'>Obs: *${obs}*</p>
-            <p>Total: R$ ${total.toFixed(2).replace('.', ',')}</p>
-        `,
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Confirmar',
-        cancelButtonText: 'Cancelar'
-    }).then(result => {
-        if (result.isConfirmed) {
-            showAlert("Pedido Enviado!", "success", `
-                <p>Cliente: ${nome}</p>
-                <p>Endereço: ${endereco}</p>
-                <p>Tempo de espera: 30m</p>
-            `);
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-            showAlert("Pedido Cancelado!", "error", "Que pena! Você cancelou o pedido.");
-        }
-    });
-}
-
 // ===== Funções auxiliares =====
+
+// Exibe alerta com SweetAlert2
 function showAlert(titulo, icone, mensagem) {
     Swal.fire({ title: titulo, icon: icone, html: mensagem });
 }
-
+// Salva dados no localStorage
 function saveData(dados) {
     localStorage.setItem('pedido', JSON.stringify(dados));
 }
-
+// Recupera dados do localStorage
 function getData() {
     const dados = localStorage.getItem('pedido');
     return dados ? JSON.parse(dados) : null;
 }
-
-function gerarResumoParaAlerta() {
+// Gera o texto do pedido
+function gerarPedido() {
     const resumo = document.querySelector("#resumo tbody");
-    let html = "<table style='font-size:14px; text-align:justify; max-width:100%;'>";
-
+    let ped = '';
     resumo.querySelectorAll("tr").forEach(tr => {
-        const nomeQtd = tr.querySelector("td:first-child").textContent;
-        const preco = tr.querySelector("td:nth-child(2)").textContent;
-        html += `<tr><td>${nomeQtd}</td><td>${preco}</td></tr>`;
+        let nomeQtd = tr.querySelector("td:first-child").textContent;
+        let preco = tr.querySelector("td:nth-child(2)").textContent;
+        ped += `\n- *${nomeQtd}* ${preco}\n`;
     });
-
-    html += "</table>";
-    return html;
+    return ped
+}
+// Abre o WhatsApp com o pedido
+function pedirnoWhats() {
+    let pedido = gerarPedido()
+    let mensagem = `Cliente: *${nome.value.trim()}*
+    \nOlá, quero pedir:
+    \n${pedido}
+    \nTotal: *R$${total.toFixed(2).replace('.', ',')}*
+    \nEndereço: ${endereco.value.trim()}
+    \n*Obs: ${obs.value.trim()}*`;
+    window.open(`https://wa.me/5579996805818?text=${encodeURIComponent(mensagem)}`);
 }

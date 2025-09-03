@@ -10,7 +10,7 @@
 
 <body>
     
-
+    <!--<button onclick="pedirnoWhats()">Pedir no Whatsapp</button>-->
     <!-- Banner --> 
     <div class="banner">
         <img src="image/bemvindo.png" alt="Banner pizza">
@@ -23,14 +23,7 @@
     <section id="Cardapio">
         <h1>Cardápio</h1>
         <table class="table">
-            <thead>
-                <tr>
-                    <th>Lanches</th>
-                    <th>Preço</th>
-                    <th>Quantidade</th>
-                </tr>
-            </thead>
-            <tbody id="tabela-cardapio"></tbody>
+            <tbody id="tabela-cardapio"><tr><th class="categorias" colspan="3">Lanches</th></tr></tbody>
         </table>
     </section>
 
@@ -44,7 +37,8 @@
                     <th>Preço</th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+            </tbody>
             <tfoot>
                 <tr class="total-row">
                     <td>TOTAL:</td>
@@ -61,16 +55,13 @@
             <label>Nome:</label>
             <input type="text" id="nome" >
 
-            <label>Telefone:</label>
-            <input type="tel" id="telefone">
-
             <label>Endereço:</label>
             <input type="text" id="endereco">
 
             <label>Observação:</label>
             <textarea id="obs"></textarea>
 
-            <button type="submit" class="btn">Enviar</button>
+            <button type="submit" class="btn">Enviar Pedido</button>
         </form>
     </section>
 
