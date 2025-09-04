@@ -82,7 +82,8 @@ h1 {
     font-weight: bold;
 }
 
-.table th, .table td {
+.table th,
+.table td {
     padding: 12px;
 }
 
@@ -142,7 +143,8 @@ h1 {
     gap: 15px;
 }
 
-#form input, textarea {
+#form input,
+textarea {
     width: 100%;
     padding: 12px;
     border: 2px solid var(--secondary);
@@ -186,6 +188,7 @@ textarea {
 }
 
 #btn-carrinho {
+    position: relative;
     width: 70px;
     height: 70px;
     border-radius: 50%;
@@ -204,11 +207,28 @@ textarea {
     transform: scale(1.1);
 }
 
+#numItems {
+    position: absolute;
+    top: -5px;
+    left: 50px;
+    background: red;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    font-weight: bold;
+    z-index: 1001;
+}
+
 /* ===== Resumo do pedido ===== */
 .resumo {
     margin-top: 10px;
     width: 400px;
-    max-height: 400px;
+    max-height: 600px;
     background: var(--bg-light);
     border-radius: 15px;
     padding: 15px;
@@ -216,14 +236,14 @@ textarea {
     overflow-y: auto;
     transform: scale(0);
     transform-origin: bottom left;
-    opacity: 0;
+    display: none;
     pointer-events: none;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    transition: transform 0.3s ease, display 0.3s ease;
 }
 
 .carrinho-aberto .resumo {
     transform: scale(1);
-    opacity: 1;
+    display: block;
     pointer-events: auto;
 }
 
@@ -233,7 +253,8 @@ textarea {
     text-align: center;
 }
 
-.resumo td, .resumo th {
+.resumo td,
+.resumo th {
     padding: 10px;
 }
 
@@ -269,6 +290,11 @@ textarea {
         width: 90%;
     }
 
+    #carrinho {
+        transform: scale(0.9);
+
+    }
+
     .carrinho-aberto {
         width: 90%;
         height: 60%;
@@ -289,7 +315,9 @@ textarea {
     #sec {
         padding: 15px;
     }
-
+    #carrinho {
+        transform: scale(0.8);
+    }
     .carrinho-aberto {
         width: 95%;
         height: 55%;

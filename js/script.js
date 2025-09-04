@@ -33,16 +33,18 @@ const lanches = [
 // Categorias
 const categorias = {
     "Lanches": [0],
-    "Pastéis": [1,2,3,4,5],
-    "Salgados": [6,7,8,9],
-    "Tortas e Bolos": [10,11,12,13],
-    "Refrigerantes": [14,15,16,17]
+    "Pastéis": [1, 2, 3, 4, 5],
+    "Salgados": [6, 7, 8, 9],
+    "Tortas e Bolos": [10, 11, 12, 13],
+    "Refrigerantes": [14, 15, 16, 17]
 };
 
 // ===== Inicialização =====
 document.addEventListener("DOMContentLoaded", () => {
     montarCardapio();
     carregarUsuario();
+    somaTotal();
+    montarResumo();
     btnCarrinho.addEventListener("click", toggleCarrinho);
     document.getElementById("form").addEventListener("submit", enviarPedido);
 });
@@ -103,17 +105,23 @@ function addToCart(id) {
 function somaTotal() {
     total = 0;
     qtdItens = 0;
-
     lanches.forEach(lanche => {
         const linha = document.querySelector(`#tabela-cardapio tr[data-id='${lanche.id}']`);
         const qtd = parseInt(linha.querySelector(".lanchename").dataset.quantidade || 0);
         if (qtd > 0) {
-            qtdItens += 1;
+            qtdItens++;
             total += lanche.preco * qtd;
         }
     });
 
     document.getElementById("total").textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+    const notify = document.getElementById("numItems");
+    if (qtdItens === 0) {
+        notify.style.display = "none";
+    } else {
+        notify.style.display = "flex";
+    }
+    notify.textContent = qtdItens;
 }
 
 // Monta resumo
@@ -153,10 +161,10 @@ function removeItem(id) {
 
 // Toggle carrinho
 function toggleCarrinho() {
+    montarResumo();
     if (carrinhoContainer.classList.contains("carrinho-fechado")) {
         carrinhoContainer.classList.replace("carrinho-fechado", "carrinho-aberto");
         btnCarrinho.textContent = "❌";
-        montarResumo();
     } else {
         btnCarrinho.textContent = "🛒";
         carrinhoContainer.classList.replace("carrinho-aberto", "carrinho-fechado");
