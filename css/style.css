@@ -179,8 +179,8 @@ textarea {
 /* ===== Carrinho ===== */
 #carrinho {
     position: fixed;
-    bottom: 20px;
-    left: 20px;
+    bottom: 10px;
+    left: 5px;
     z-index: 1000;
     display: flex;
     flex-direction: column;
@@ -297,8 +297,8 @@ textarea {
 
     .carrinho-aberto {
         width: 90%;
-        height: 60%;
-        bottom: 80px;
+        height: auto;
+        top: 180px;
     }
 }
 
@@ -320,7 +320,7 @@ textarea {
     }
     .carrinho-aberto {
         width: 95%;
-        height: 55%;
-        bottom: 70px;
+        height: auto;
+        top: 180px;
     }
 }

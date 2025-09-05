@@ -27,16 +27,19 @@ const lanches = [
     { id: 14, nome: "Coca-cola 1L", preco: 6.00 },
     { id: 15, nome: "Guaraná 1L", preco: 6.00 },
     { id: 16, nome: "Coca-cola Lata 350ml", preco: 4.00 },
-    { id: 17, nome: "Guaraná Lata 350ml", preco: 4.00 }
+    { id: 17, nome: "Guaraná Lata 350ml", preco: 4.00 },
+    { id: 18, nome: "Pudim", preco: 5.00 }
+
 ];
 
 // Categorias
 const categorias = {
-    "Lanches": [0],
-    "Pastéis": [1, 2, 3, 4, 5],
+    "Lanches": [0, 1],
+    "Pastéis": [2, 3, 4, 5],
     "Salgados": [6, 7, 8, 9],
     "Tortas e Bolos": [10, 11, 12, 13],
-    "Refrigerantes": [14, 15, 16, 17]
+    "Refrigerantes": [14, 15, 16, 17],
+    "Sobremesas": [18]
 };
 
 // ===== Inicialização =====
@@ -97,6 +100,9 @@ function addToCart(id) {
     const linha = document.querySelector(`#tabela-cardapio tr[data-id='${id}']`);
     const lancheQtd = linha.querySelector(".lanchename");
     lancheQtd.dataset.quantidade = parseInt(lancheQtd.dataset.quantidade || 0) + 1;
+    if (qtdItens === 0) {
+        toggleCarrinho();
+    }
     somaTotal();
     montarResumo();
 }
@@ -115,6 +121,11 @@ function somaTotal() {
     });
 
     document.getElementById("total").textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+    notification();
+}
+
+// Notificação de itens no carrinho
+function notification() {
     const notify = document.getElementById("numItems");
     if (qtdItens === 0) {
         notify.style.display = "none";
