@@ -1,12 +1,17 @@
 // ===== Variáveis =====
 let total = 0;
 let qtdItens = 0;
+let nomeUltimo = "";
+let qtdUltimo = 0;
+
+// Elementos do DOM
 const nome = document.getElementById("nome");
 const endereco = document.getElementById("endereco");
 const obs = document.getElementById("obs");
 const resumoTbody = document.querySelector("#resumo tbody");
 const carrinhoContainer = document.getElementById("carrinho");
 const btnCarrinho = document.getElementById("btn-carrinho");
+const lastAddedItem = document.getElementById("lastItem");
 
 // ===== Dados dos lanches =====
 const lanches = [
@@ -100,11 +105,10 @@ function addToCart(id) {
     const linha = document.querySelector(`#tabela-cardapio tr[data-id='${id}']`);
     const lancheQtd = linha.querySelector(".lanchename");
     lancheQtd.dataset.quantidade = parseInt(lancheQtd.dataset.quantidade || 0) + 1;
-    if (qtdItens === 0) {
-        toggleCarrinho();
-    }
+    lastAddedItem.textContent = `${lancheQtd.textContent} x ${lancheQtd.dataset.quantidade}`;
     somaTotal();
     montarResumo();
+    mostrarUltimoItem();
 }
 
 // Soma total
@@ -158,6 +162,10 @@ function montarResumo() {
 
             tr.append(tdNome, tdPreco, tdExcluir);
             resumoTbody.appendChild(tr);
+
+            nomeUltimo = lanche.nome;
+            qtdUltimo = qtd
+            
         }
     });
 }
@@ -172,13 +180,40 @@ function removeItem(id) {
 
 // Toggle carrinho
 function toggleCarrinho() {
+    let res = document.getElementById("resumo")
     montarResumo();
     if (carrinhoContainer.classList.contains("carrinho-fechado")) {
         carrinhoContainer.classList.replace("carrinho-fechado", "carrinho-aberto");
         btnCarrinho.textContent = "❌";
+
+        res.style.display = "block";
+        setTimeout(() => {
+            res.style.transform = "scale(1)";
+            res.style.pointerEvents = "auto"
+        }, 100)
+
     } else {
         btnCarrinho.textContent = "🛒";
         carrinhoContainer.classList.replace("carrinho-aberto", "carrinho-fechado");
+
+        res.style.transform = "scale(0)";
+        res.style.pointerEvents = "none"
+        res.style.display = "none";
+    }
+    mostrarUltimoItem();
+}
+
+function mostrarUltimoItem() {
+    if (qtdItens < 1 || btnCarrinho.textContent == "❌") {
+        lastAddedItem.style.display = "none";
+        lastAddedItem.style.transform = "scale(0)";
+        btnCarrinho.style.borderRadius = "50%";
+    } else if (qtdItens > 0 || btnCarrinho.textContent == "🛒") {
+        lastAddedItem.style.display = "block";
+        setTimeout(() => {
+            lastAddedItem.style.transform = "scale(1)";
+            btnCarrinho.style.borderRadius = "50% 0 0 50%";
+        }, 100);
     }
 }
 

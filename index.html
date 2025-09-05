@@ -28,14 +28,16 @@
     <section id="sec">
         <h1>Preencha suas informações</h1>
         <form id="form">
-            <label>Nome:</label>
+            <label>Nome:<span style="color:red">*</span></label>
             <input type="text" id="nome">
 
-            <label>Endereço:</label>
+            <label>Endereço:<span style="color:red">*</span></label>
             <input type="text" id="endereco">
 
             <label>Observação:</label>
             <textarea id="obs"></textarea>
+
+            <label style="color: red; display: block; text-align: center; font-size: 0.9rem;">* --Seu pedido será enviado via WhatsApp para confirmação-- *</label>
 
             <button type="submit" class="btn">Enviar Pedido</button>
         </form>
@@ -44,6 +46,7 @@
     <!-- Carrinho -->
     <div id="carrinho" class="carrinho-fechado">
         <span id="numItems"></span>
+        <span id="lastItem"></span>
         <button id="btn-carrinho">🛒</button>
         <div class="resumo" id="resumo">
             <h1>Resumo do pedido</h1>

@@ -22,8 +22,10 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-size: large;
     gap: 20px;
     padding: 20px;
+    padding-bottom: 100px;
 }
 
 /* Títulos */
@@ -129,8 +131,8 @@ h1 {
     align-items: center;
     width: 100%;
     max-width: 600px;
-    background: #7ef57e;
-    border-radius: 20px;
+    background: #fff8f0;
+    border-radius: 15px;
     padding: 20px;
     gap: 10px;
 }
@@ -163,7 +165,7 @@ textarea {
     height: 45px;
     border: none;
     border-radius: 10px;
-    background: var(--primary);
+    background: var(--accent);
     color: white;
     cursor: pointer;
     font-weight: bold;
@@ -201,6 +203,7 @@ textarea {
     align-items: center;
     box-shadow: 0 4px 12px var(--shadow);
     transition: all 0.3s ease;
+    padding: 15px;
 }
 
 #btn-carrinho:hover {
@@ -224,6 +227,29 @@ textarea {
     z-index: 1001;
 }
 
+#lastItem {
+    position: absolute;
+    text-align: center;
+    align-content: center;
+    left: 65px;
+    width: 150px;
+    height: 70px;
+    align-items: end;
+    background: #fef3e0;
+    color: #333;
+    border-collapse: collapse;
+    border-radius: 0 50px 50px 0;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+    padding: 10px;
+    font-size: 12px;
+    font-weight: bold;
+    display: none;
+    z-index: -1001;
+    transform-origin: left;
+    transform: scale(0);
+    transition: transform 0.3s ease, display 0.3s ease;
+}
+
 /* ===== Resumo do pedido ===== */
 .resumo {
     margin-top: 10px;
@@ -237,14 +263,11 @@ textarea {
     transform: scale(0);
     transform-origin: bottom left;
     display: none;
-    pointer-events: none;
-    transition: transform 0.3s ease, display 0.3s ease;
+    transition: transform 0.3s ease;
 }
 
-.carrinho-aberto .resumo {
-    transform: scale(1);
-    display: block;
-    pointer-events: auto;
+.carrinho-aberto {
+    max-height: 600px;
 }
 
 .resumo table {
@@ -277,6 +300,10 @@ textarea {
 
 /* Responsividade */
 @media (max-width: 768px) {
+    button {
+        font-size: 14px;
+    }
+
     .banner .cta {
         font-size: 1.2rem;
         padding: 10px 20px;
@@ -294,15 +321,13 @@ textarea {
         transform: scale(0.9);
 
     }
-
-    .carrinho-aberto {
-        width: 90%;
-        height: auto;
-        top: 180px;
-    }
 }
 
 @media (max-width: 480px) {
+    button {
+        font-size: 12px;
+    }
+
     .banner .cta {
         font-size: 1rem;
         padding: 8px 16px;
@@ -315,12 +340,9 @@ textarea {
     #sec {
         padding: 15px;
     }
+
     #carrinho {
         transform: scale(0.8);
     }
-    .carrinho-aberto {
-        width: 95%;
-        height: auto;
-        top: 180px;
-    }
+
 }
