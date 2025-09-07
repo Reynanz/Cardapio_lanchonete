@@ -1,8 +1,7 @@
 // ===== Variáveis =====
 let total = 0;
 let qtdItens = 0;
-let nomeUltimo = "";
-let qtdUltimo = 0;
+let historico = [];
 
 // Elementos do DOM
 const nome = document.getElementById("nome");
@@ -105,11 +104,15 @@ function addToCart(id) {
     const linha = document.querySelector(`#tabela-cardapio tr[data-id='${id}']`);
     const lancheQtd = linha.querySelector(".lanchename");
     lancheQtd.dataset.quantidade = parseInt(lancheQtd.dataset.quantidade || 0) + 1;
-    lastAddedItem.textContent = `${lancheQtd.textContent} x ${lancheQtd.dataset.quantidade}`;
+
+    // adiciona no histórico
+    historico.push(id);
+
     somaTotal();
     montarResumo();
-    mostrarUltimoItem();
+    atualizarLastItem();
 }
+
 
 // Soma total
 function somaTotal() {
@@ -162,10 +165,6 @@ function montarResumo() {
 
             tr.append(tdNome, tdPreco, tdExcluir);
             resumoTbody.appendChild(tr);
-
-            nomeUltimo = lanche.nome;
-            qtdUltimo = qtd
-            
         }
     });
 }
@@ -174,8 +173,13 @@ function montarResumo() {
 function removeItem(id) {
     const linha = document.querySelector(`#tabela-cardapio tr[data-id='${id}']`);
     linha.querySelector(".lanchename").dataset.quantidade = 0;
+    historico = historico.filter(hId => {
+        const l = document.querySelector(`#tabela-cardapio tr[data-id='${hId}']`);
+        return parseInt(l.querySelector(".lanchename").dataset.quantidade || 0) > 0;
+    });
     montarResumo();
     somaTotal();
+    atualizarLastItem();
 }
 
 // Toggle carrinho
@@ -200,21 +204,38 @@ function toggleCarrinho() {
         res.style.pointerEvents = "none"
         res.style.display = "none";
     }
-    mostrarUltimoItem();
+    atualizarLastItem();
 }
 
-function mostrarUltimoItem() {
-    if (qtdItens < 1 || btnCarrinho.textContent == "❌") {
+function atualizarLastItem() {
+    if (historico.length === 0) {
         lastAddedItem.style.display = "none";
         lastAddedItem.style.transform = "scale(0)";
         btnCarrinho.style.borderRadius = "50%";
-    } else if (qtdItens > 0 || btnCarrinho.textContent == "🛒") {
-        lastAddedItem.style.display = "block";
-        setTimeout(() => {
-            lastAddedItem.style.transform = "scale(1)";
-            btnCarrinho.style.borderRadius = "50% 0 0 50%";
-        }, 100);
+        return;
     }
+
+    // pega o último item válido do histórico
+    for (let i = historico.length - 1; i >= 0; i--) {
+        const id = historico[i];
+        const linha = document.querySelector(`#tabela-cardapio tr[data-id='${id}']`);
+        const qtd = parseInt(linha.querySelector(".lanchename").dataset.quantidade || 0);
+        if (qtd > 0) {
+            const lanche = lanches.find(l => l.id === id);
+            lastAddedItem.textContent = `${lanche.nome} x ${qtd}`;
+            lastAddedItem.style.display = "block";
+            setTimeout(() => {
+                btnCarrinho.style.borderRadius = "50% 0 0 50%";
+                lastAddedItem.style.transform = "scale(1)";
+            }, 100);
+            return;
+        }
+    }
+
+    // se nenhum item válido encontrado
+    lastAddedItem.style.display = "none";
+    lastAddedItem.style.transform = "scale(0)";
+    btnCarrinho.style.borderRadius = "50%";
 }
 
 // Salva e carrega usuário
