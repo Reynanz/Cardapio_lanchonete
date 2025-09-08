@@ -1,77 +1,69 @@
-# 🍕 Pizzaria da Vila
+# 🌅 Lanchonete Pôr do Sol — Cardápio Digital 🍔🥤
 
-Bem-vindo ao **Pizzaria da Vila**, o projeto definitivo para quem ama pizza e quer pedir com facilidade, estilo e rapidez! Este repositório traz um site moderno, responsivo e interativo para pizzarias, com cardápio dinâmico, resumo do pedido e validação inteligente de formulário.
-
----
-
-## 🚀 Funcionalidades
-
-- **Cardápio Dinâmico:** Sabores e bebidas renderizados automaticamente via JavaScript.
-- **Resumo do Pedido:** Veja o total e os itens escolhidos em tempo real.
-- **Formulário Validado:** Nome, telefone e endereço com validação e feedback instantâneo.
-- **Layout Responsivo:** Perfeito em qualquer dispositivo, do celular ao desktop.
-- **Banner Interativo:** Imagens e botão de ação para engajar o cliente.
-- **Feedback Visual:** Confirmação de pedido e alertas usando SweetAlert2.
+Bem-vindo ao projeto de cardápio digital da Lanchonete Pôr do Sol!  
+Aqui você encontra uma solução simples e prática para pedidos online, feita com HTML, CSS e JavaScript.  
+Ideal para pequenas lanchonetes que querem facilitar o atendimento. 😋
 
 ---
 
-## 📸 Preview
+## ✨ Funcionalidades
 
-<div align="center">
-  <img src="image/bemvindo.png" alt="Bem-vindo" width="400"/>
-</div>
+- 📋 Cardápio organizado por categorias e itens.
+- 🛒 Carrinho: adicione, remova e visualize seus pedidos.
+- 💰 Resumo do pedido com cálculo automático do total.
+- 📝 Formulário para nome, endereço e observações.
+- 📲 Envio do pedido direto para o WhatsApp do atendente.
+- 🎉 Feedback visual com SweetAlert2.
+- 📱 Layout responsivo para desktop e mobile.
+- 💾 Dados do usuário salvos localmente para facilitar pedidos futuros.
 
 ---
 
-## 🛠️ Estrutura do Projeto
+## 📁 Estrutura do Projeto
 
 ```
-Site_pizzaria/
+Cardapio_lanchonete/
 ├── index.html
 ├── css/
 │   └── style.css
 ├── js/
 │   └── script.js
 ├── image/
-│   ├── banner.png
-│   ├── bemvindo.png
-│   └── pizza.png
+│   └── lanchonete.png
+├── .vscode/
+│   └── settings.json
+├── LICENSE
 └── README.md
 ```
 
-- **index.html:** Página principal do site.
-- **css/style.css:** Estilos modernos e responsivos.
-- **js/script.js:** Lógica do cardápio, resumo e validação.
-- **image/**: Imagens para banner e pizzas.
-
 ---
 
-## 💻 Como rodar
+## 🚦 Como usar
 
-1. Clone este repositório:
+1. Clone o repositório:
    ```sh
-   git clone https://github.com/seuusuario/pizzaria-da-vila.git
+   git clone https://github.com/seuusuario/cardapio_lanchonete.git
    ```
-2. Abra o projeto no **VS Code**.
-3. Use a extensão **Live Preview** ou um servidor local para visualizar o `index.html`.
-4. Aproveite e faça seu pedido!
+2. Abra a pasta no **VS Code**.
+3. Use o Live Preview (porta 5500 já configurada).
+4. Abra o arquivo `index.html` no navegador.
+5. Faça seu pedido e envie pelo WhatsApp. 📲
 
 ---
 
-## ✨ Tecnologias
+## 🛠️ Personalização
 
-- **HTML5**
-- **CSS3**
-- **JavaScript ES6**
-- [SweetAlert2](https://sweetalert2.github.io/) para alertas
+- ✏️ Para alterar o cardápio, edite os arrays `lanches` e `categorias` em [`js/script.js`](js/script.js).
+- 📞 Para mudar o número do WhatsApp, ajuste a função `abrirWhatsApp()` em [`js/script.js`](js/script.js).
+- 🎨 Para modificar estilos, edite [`css/style.css`](css/style.css).
 
 ---
 
 ## 📄 Licença
 
-Este projeto está sob a licença MIT. Veja [LICENSE](LICENSE) para mais detalhes.
+MIT — veja [LICENSE](LICENSE).
 
 ---
 
-Feito com ❤️ por Reynanz.  
-Se gostou, deixe uma estrela ⭐ e compartilhe com os amigos pizzaiolos!
+Projeto simples para estudo e uso em pequenas lanchonetes.  
+🍟 Bom apetite e bons códigos!
