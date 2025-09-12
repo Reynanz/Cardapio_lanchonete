@@ -1,8 +1,10 @@
+import { obterProdutosCardapio, atualizarEstoque } from "./firebase-front.js";
+
 // ===== Variáveis =====
 let total = 0;
 let qtdItens = 0;
+let lanches = [];
 let historico = [];
-
 // Elementos do DOM
 const nome = document.getElementById("nome");
 const endereco = document.getElementById("endereco");
@@ -12,43 +14,14 @@ const carrinhoContainer = document.getElementById("carrinho");
 const btnCarrinho = document.getElementById("btn-carrinho");
 const lastAddedItem = document.getElementById("lastItem");
 
-// ===== Dados dos lanches =====
-const lanches = [
-    { id: 0, nome: "X-Burguer", preco: 12.00 },
-    { id: 1, nome: "Cachorro-quente", preco: 5.00 },
-    { id: 2, nome: "Pastel de Frango", preco: 5.00 },
-    { id: 3, nome: "Pastel de Carne", preco: 5.00 },
-    { id: 4, nome: "Pastel de Queijo", preco: 5.00 },
-    { id: 5, nome: "Pastel de Pizza", preco: 5.00 },
-    { id: 6, nome: "Coxinha", preco: 4.00 },
-    { id: 7, nome: "Calafrango", preco: 4.00 },
-    { id: 8, nome: "Enroladinho de Salsicha", preco: 4.00 },
-    { id: 9, nome: "Salgado de Charque", preco: 4.00 },
-    { id: 10, nome: "Bolinho de Presunto e Queijo", preco: 4.00 },
-    { id: 11, nome: "Torta de Frango", preco: 5.00 },
-    { id: 12, nome: "Bolo de Ovos", preco: 4.00 },
-    { id: 13, nome: "Bolo de Leite", preco: 4.00 },
-    { id: 14, nome: "Coca-cola 1L", preco: 6.00 },
-    { id: 15, nome: "Guaraná 1L", preco: 6.00 },
-    { id: 16, nome: "Coca-cola Lata 350ml", preco: 4.00 },
-    { id: 17, nome: "Guaraná Lata 350ml", preco: 4.00 },
-    { id: 18, nome: "Pudim", preco: 5.00 }
 
-];
-
-// Categorias
-const categorias = {
-    "Lanches": [0, 1],
-    "Pastéis": [2, 3, 4, 5],
-    "Salgados": [6, 7, 8, 9],
-    "Tortas e Bolos": [10, 11, 12, 13],
-    "Refrigerantes": [14, 15, 16, 17],
-    "Sobremesas": [18]
-};
 
 // ===== Inicialização =====
 document.addEventListener("DOMContentLoaded", () => {
-    montarCardapio();
+    obterProdutosCardapio(produtos => {
+        lanches = produtos
+        montarCardapio(lanches);
+    });
     carregarUsuario();
     somaTotal();
     montarResumo();
@@ -58,61 +31,83 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // ===== Funções =====
 
-// Monta o cardápio com categorias
-function montarCardapio() {
-    const tabela = document.getElementById("tabela-cardapio");
-    tabela.innerHTML = "";
-
-    for (let cat in categorias) {
-        let trCat = document.createElement("tr");
-        let thCat = document.createElement("th");
-        thCat.colSpan = 3;
-        thCat.textContent = cat;
-        thCat.classList.add("categorias");
-        trCat.appendChild(thCat);
-        tabela.appendChild(trCat);
-
-        categorias[cat].forEach(id => {
-            let lanche = lanches[id];
-            let tr = document.createElement("tr");
-            tr.dataset.id = lanche.id;
-
-            let tdNome = document.createElement("td");
-            tdNome.classList.add("lanchename");
-            tdNome.dataset.quantidade = 0;
-            tdNome.textContent = lanche.nome;
-
-            let tdPreco = document.createElement("td");
-            tdPreco.classList.add("preco");
-            tdPreco.dataset.preco = lanche.preco;
-            tdPreco.textContent = `R$ ${lanche.preco.toFixed(2).replace('.', ',')}`;
-
-            let tdBtn = document.createElement("td");
-            let btnAdd = document.createElement("button");
-            btnAdd.textContent = "Adicionar ao carrinho";
-            btnAdd.onclick = () => addToCart(lanche.id);
-            tdBtn.appendChild(btnAdd);
-
-            tr.append(tdNome, tdPreco, tdBtn);
-            tabela.appendChild(tr);
-        });
-    }
-}
-
 // Adiciona item ao carrinho
 function addToCart(id) {
     const linha = document.querySelector(`#tabela-cardapio tr[data-id='${id}']`);
     const lancheQtd = linha.querySelector(".lanchename");
     lancheQtd.dataset.quantidade = parseInt(lancheQtd.dataset.quantidade || 0) + 1;
 
-    // adiciona no histórico
-    historico.push(id);
+    if (!historico.includes(id)) historico.push(id);
 
     somaTotal();
     montarResumo();
     atualizarLastItem();
 }
+//
+function montarCardapio() {
+    const tabela = document.getElementById("tabela-cardapio");
+    tabela.innerHTML = "";
 
+    lanches.forEach(p => {
+        const ths = tabela.querySelectorAll("th");
+        const existe = Array.from(ths).some(th => th.textContent.trim() === p.categoria);
+
+        // Cria linha do lanche
+        let trLanche = document.createElement("tr");
+        trLanche.dataset.id = p.id
+        trLanche.dataset.categoria = p.categoria
+
+        let lancheNometd = document.createElement("td");
+        lancheNometd.classList.add("lanchename");
+        lancheNometd.textContent = p.nome + " ";
+
+        let estoqueSpan = document.createElement("span");
+        estoqueSpan.classList.add("estoque-disponivel");
+        estoqueSpan.textContent = `(Disponível: ${p.quantidade})`;
+        lancheNometd.appendChild(estoqueSpan);
+
+        lancheNometd.dataset.quantidade = 0;
+        lancheNometd.dataset.disponivel = p.quantidade;
+
+        let lanchePrecotd = document.createElement("td");
+        lanchePrecotd.classList.add("preco");
+        lanchePrecotd.textContent = `R$ ${p.preco.toFixed(2).replace('.', ',')}`;
+
+        let tdBtn = document.createElement("td");
+        let btnAdd = document.createElement("button");
+        btnAdd.textContent = "Adicionar ao carrinho";
+        btnAdd.classList.add("btnadd")
+
+        if (p.quantidade < 1) {
+            btnAdd.classList.replace("btnadd", "btndisable");
+            btnAdd.disabled = true;
+            btnAdd.textContent = "Indisponível";
+        } 
+        btnAdd.onclick = () => addToCart(p.id);
+        tdBtn.appendChild(btnAdd);
+
+        trLanche.append(lancheNometd, lanchePrecotd, tdBtn);
+
+        if (!existe) {
+            // Cria nova categoria
+            let trCategoria = document.createElement("tr");
+            let categoriaNome = document.createElement("th");
+            categoriaNome.textContent = p.categoria;
+            categoriaNome.colSpan = 3;
+            categoriaNome.classList.add("categorias");
+            trCategoria.appendChild(categoriaNome);
+            tabela.append(trCategoria);
+            tabela.append(trLanche);
+        } else {
+            // Categoria já existe → encontra a linha e adiciona depois
+            const trCategoriaExistente = Array.from(tabela.querySelectorAll("tr")).find(tr => {
+                const th = tr.querySelector("th");
+                return th && th.textContent.trim() === p.categoria;
+            });
+            trCategoriaExistente.insertAdjacentElement("afterend", trLanche);
+        }
+    });
+}
 
 // Soma total
 function somaTotal() {
@@ -255,6 +250,24 @@ function enviarPedido(e) {
     if (!nome.value.trim()) return Swal.fire("Erro!", "Por favor insira um nome!", "error");
     if (!endereco.value.trim()) return Swal.fire("Erro!", "Por favor insira um endereço!", "error");
 
+    let estoqueInsuficiente = [];
+    resumoTbody.querySelectorAll("tr").forEach(tr => {
+        const id = tr.dataset.id;
+        const qtd = parseInt(tr.querySelector("td:first-child").textContent.split('x')[1]);
+        const lanche = lanches.find(l => l.id == id);
+        if (qtd > lanche.quantidade) {
+            estoqueInsuficiente.push(`${lanche.nome} (disponível: ${lanche.quantidade}, pedido: ${qtd})`);
+        }
+    });
+
+    if (estoqueInsuficiente.length > 0) {
+        return Swal.fire(
+            "Estoque insuficiente!",
+            `Os seguintes itens não têm quantidade suficiente:<br>${estoqueInsuficiente.join('<br>')}`,
+            "error"
+        );
+    }
+
     salvarUsuario();
     abrirWhatsApp();
 }
@@ -263,9 +276,12 @@ function enviarPedido(e) {
 function gerarPedido() {
     let ped = '';
     resumoTbody.querySelectorAll("tr").forEach(tr => {
-        const nomeQtd = tr.querySelector("td:first-child").textContent;
-        const preco = tr.querySelector("td:nth-child(2)").textContent;
-        ped += `\n- *${nomeQtd}* ${preco}\n`;
+        const id = tr.dataset.id;
+        const qtd = parseInt(tr.querySelector("td:first-child").textContent.split('x')[1]);
+        const lanche = lanches.find(l => l.id == id);
+        const novoEstoque = lanche.quantidade - qtd;
+        ped += `\n- *${lanche.nome} x${qtd}* R$ ${(lanche.preco * qtd).toFixed(2).replace('.', ',')}\n`;
+        atualizarEstoque(id, novoEstoque); // Passa o novo valor absoluto
     });
     return ped;
 }
@@ -276,3 +292,4 @@ function abrirWhatsApp() {
     const mensagem = `Cliente: *${nome.value.trim()}*\nOlá, quero pedir:\n${pedido}\nTotal: *R$${total.toFixed(2).replace('.', ',')}*\nEndereço: ${endereco.value.trim()}\n*Obs: ${obs.value.trim()}*`;
     window.open(`https://wa.me/5579999204686?text=${encodeURIComponent(mensagem)}`);
 }
+

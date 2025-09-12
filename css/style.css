@@ -96,7 +96,7 @@ h1 {
     box-shadow: 0 2px 5px var(--shadow);
 }
 
-.table button {
+.btnadd {
     padding: 5px 10px;
     border: none;
     border-radius: 6px;
@@ -106,10 +106,20 @@ h1 {
     transition: transform 0.2s ease, background 0.2s ease;
 }
 
-.table button:hover {
+.btnadd:hover {
     transform: scale(1.1);
     background: #45a049;
 }
+
+.btndisable {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 6px;
+    background: #9c9b9b;
+    color: white;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
 
 .categorias {
     background: #e78e46a9;
@@ -122,6 +132,10 @@ h1 {
     width: 25%;
     color: green;
     font-weight: bold;
+}
+
+.estoque-disponivel {
+    color: #8f8d8d93;
 }
 
 /* Formulário */
@@ -239,7 +253,7 @@ textarea {
     color: #333;
     border-collapse: collapse;
     border-radius: 0 50px 50px 0;
-    box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
     padding: 10px;
     font-size: 12px;
     font-weight: bold;
