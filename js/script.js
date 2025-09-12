@@ -273,23 +273,26 @@ function enviarPedido(e) {
 }
 
 // Gera texto do pedido
-function gerarPedido() {
+async function gerarPedido() {
     let ped = '';
+    let promises = [];
     resumoTbody.querySelectorAll("tr").forEach(tr => {
         const id = tr.dataset.id;
         const qtd = parseInt(tr.querySelector("td:first-child").textContent.split('x')[1]);
         const lanche = lanches.find(l => l.id == id);
         const novoEstoque = lanche.quantidade - qtd;
         ped += `\n- *${lanche.nome} x${qtd}* R$ ${(lanche.preco * qtd).toFixed(2).replace('.', ',')}\n`;
-        atualizarEstoque(id, novoEstoque); // Passa o novo valor absoluto
+        promises.push(atualizarEstoque(id, novoEstoque)); // Passa o novo valor absoluto
     });
+    await Promise.all(promises)
     return ped;
 }
 
 // Abre WhatsApp
-function abrirWhatsApp() {
-    const pedido = gerarPedido();
+async function abrirWhatsApp() {
+    const pedido = await gerarPedido();
     const mensagem = `Cliente: *${nome.value.trim()}*\nOlá, quero pedir:\n${pedido}\nTotal: *R$${total.toFixed(2).replace('.', ',')}*\nEndereço: ${endereco.value.trim()}\n*Obs: ${obs.value.trim()}*`;
     window.open(`https://wa.me/5579999204686?text=${encodeURIComponent(mensagem)}`);
+    location.reload();
 }
 
