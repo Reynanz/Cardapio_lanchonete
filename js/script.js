@@ -48,64 +48,82 @@ function montarCardapio() {
     const tabela = document.getElementById("tabela-cardapio");
     tabela.innerHTML = "";
 
-    lanches.forEach(p => {
-        const ths = tabela.querySelectorAll("th");
-        const existe = Array.from(ths).some(th => th.textContent.trim() === p.categoria);
+    // ordem desejada → as que não estão aqui ficam no meio, em ordem alfabética
+    const ordemCategorias = ["Lanche", "Pastel", "Bolos e Tortas", "Sobremesa", "Refrigerante"];
 
-        // Cria linha do lanche
-        let trLanche = document.createElement("tr");
-        trLanche.dataset.id = p.id
-        trLanche.dataset.categoria = p.categoria
+    // Agrupar por categoria
+    const categorias = lanches.reduce((acc, p) => {
+        if (!acc[p.categoria]) acc[p.categoria] = [];
+        acc[p.categoria].push(p);
+        return acc;
+    }, {});
 
-        let lancheNometd = document.createElement("td");
-        lancheNometd.classList.add("lanchename");
-        lancheNometd.textContent = p.nome + " ";
+    // Definir a ordem real a ser usada
+    let ordemFinal = Object.keys(categorias).sort((a, b) => {
+        const idxA = ordemCategorias.indexOf(a);
+        const idxB = ordemCategorias.indexOf(b);
 
-        let estoqueSpan = document.createElement("span");
-        estoqueSpan.classList.add("estoque-disponivel");
-        estoqueSpan.textContent = `(Disponível: ${p.quantidade})`;
-        lancheNometd.appendChild(estoqueSpan);
+        // categorias não listadas ficam no meio
+        if (idxA === -1 && idxB === -1) return a.localeCompare(b);
+        if (idxA === -1) return -1;
+        if (idxB === -1) return 1;
+        return idxA - idxB;
+    });
 
-        lancheNometd.dataset.quantidade = 0;
-        lancheNometd.dataset.disponivel = p.quantidade;
+    // Forçar sobremesas e refrigerantes pro final
+    ordemFinal = ordemFinal.filter(c => c !== "Sobremesa" && c !== "Refrigerante")
+        .concat(["Sobremesa", "Refrigerante"].filter(c => categorias[c]));
 
-        let lanchePrecotd = document.createElement("td");
-        lanchePrecotd.classList.add("preco");
-        lanchePrecotd.textContent = `R$ ${p.preco.toFixed(2).replace('.', ',')}`;
+    // Montar tabela
+    ordemFinal.forEach(categoria => {
+        // Linha de categoria
+        const trCategoria = document.createElement("tr");
+        const th = document.createElement("th");
+        th.colSpan = 3;
+        th.textContent = categoria;
+        th.classList.add("categorias");
+        trCategoria.appendChild(th);
+        tabela.appendChild(trCategoria);
 
-        let tdBtn = document.createElement("td");
-        let btnAdd = document.createElement("button");
-        btnAdd.textContent = "Adicionar ao carrinho";
-        btnAdd.classList.add("btnadd")
+        // Itens da categoria
+        categorias[categoria].forEach(p => {
+            const trLanche = document.createElement("tr");
+            trLanche.dataset.id = p.id;
+            trLanche.dataset.categoria = p.categoria;
 
-        if (p.quantidade < 1) {
-            btnAdd.classList.replace("btnadd", "btndisable");
-            btnAdd.disabled = true;
-            btnAdd.textContent = "Indisponível";
-        }
-        btnAdd.onclick = () => addToCart(p.id);
-        tdBtn.appendChild(btnAdd);
+            const tdNome = document.createElement("td");
+            tdNome.classList.add("lanchename");
+            tdNome.textContent = p.nome + " ";
 
-        trLanche.append(lancheNometd, lanchePrecotd, tdBtn);
+            const estoqueSpan = document.createElement("span");
+            estoqueSpan.classList.add("estoque-disponivel");
+            estoqueSpan.textContent = `(Disponível: ${p.quantidade})`;
+            tdNome.appendChild(estoqueSpan);
 
-        if (!existe) {
-            // Cria nova categoria
-            let trCategoria = document.createElement("tr");
-            let categoriaNome = document.createElement("th");
-            categoriaNome.textContent = p.categoria;
-            categoriaNome.colSpan = 3;
-            categoriaNome.classList.add("categorias");
-            trCategoria.appendChild(categoriaNome);
-            tabela.append(trCategoria);
-            tabela.append(trLanche);
-        } else {
-            // Categoria já existe → encontra a linha e adiciona depois
-            const trCategoriaExistente = Array.from(tabela.querySelectorAll("tr")).find(tr => {
-                const th = tr.querySelector("th");
-                return th && th.textContent.trim() === p.categoria;
-            });
-            trCategoriaExistente.insertAdjacentElement("afterend", trLanche);
-        }
+            tdNome.dataset.quantidade = 0;
+            tdNome.dataset.disponivel = p.quantidade;
+
+            const tdPreco = document.createElement("td");
+            tdPreco.classList.add("preco");
+            tdPreco.textContent = `R$ ${p.preco.toFixed(2).replace('.', ',')}`;
+
+            const tdBtn = document.createElement("td");
+            const btnAdd = document.createElement("button");
+            btnAdd.textContent = "Adicionar ao carrinho";
+            btnAdd.classList.add("btnadd");
+
+            if (p.quantidade < 1) {
+                btnAdd.classList.replace("btnadd", "btndisable");
+                btnAdd.disabled = true;
+                btnAdd.textContent = "Indisponível";
+            }
+
+            btnAdd.onclick = () => addToCart(p.id);
+            tdBtn.appendChild(btnAdd);
+
+            trLanche.append(tdNome, tdPreco, tdBtn);
+            tabela.appendChild(trLanche);
+        });
     });
 }
 
