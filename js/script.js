@@ -82,7 +82,7 @@ function montarCardapio() {
             btnAdd.classList.replace("btnadd", "btndisable");
             btnAdd.disabled = true;
             btnAdd.textContent = "Indisponível";
-        } 
+        }
         btnAdd.onclick = () => addToCart(p.id);
         tdBtn.appendChild(btnAdd);
 
@@ -154,20 +154,49 @@ function montarResumo() {
             const tdPreco = document.createElement("td");
             tdPreco.textContent = `R$ ${(lanche.preco * qtd).toFixed(2).replace('.', ',')}`;
 
-            const tdExcluir = document.createElement("td");
-            tdExcluir.innerHTML = `<button class="excluir">🗑️</button>`;
-            tdExcluir.querySelector("button").onclick = () => removeItem(lanche.id);
+            const tdAdd = document.createElement("td");
+            const tdSub = document.createElement("td");
+            tdAdd.innerHTML = `<button class="add">➕</button>`;
+            tdSub.innerHTML = `<button class="sub">➖</button>`;
+            tdAdd.querySelector(".add").onclick = () => addItem(lanche.id);
+            tdSub.querySelector(".sub").onclick = () => subItem(lanche.id);
 
-            tr.append(tdNome, tdPreco, tdExcluir);
+            tr.append(tdNome, tdPreco, tdAdd, tdSub);
             resumoTbody.appendChild(tr);
         }
     });
 }
 
 // Remove item
+/*
 function removeItem(id) {
     const linha = document.querySelector(`#tabela-cardapio tr[data-id='${id}']`);
-    linha.querySelector(".lanchename").dataset.quantidade = 0;
+    linha.querySelector(".lanchename").dataset.quantidade-- ;
+    historico = historico.filter(hId => {
+        const l = document.querySelector(`#tabela-cardapio tr[data-id='${hId}']`);
+        return parseInt(l.querySelector(".lanchename").dataset.quantidade || 0) > 0;
+    });
+    montarResumo();
+    somaTotal();
+    atualizarLastItem();
+}
+*/
+
+// Adicionar e subtrair item
+function addItem(id) {
+    const linha = document.querySelector(`#tabela-cardapio tr[data-id='${id}']`);
+    linha.querySelector(".lanchename").dataset.quantidade++;
+    historico = historico.filter(hId => {
+        const l = document.querySelector(`#tabela-cardapio tr[data-id='${hId}']`);
+        return parseInt(l.querySelector(".lanchename").dataset.quantidade || 0) > 0;
+    });
+    montarResumo();
+    somaTotal();
+    atualizarLastItem();
+}
+function subItem(id) {
+    const linha = document.querySelector(`#tabela-cardapio tr[data-id='${id}']`);
+    linha.querySelector(".lanchename").dataset.quantidade--;
     historico = historico.filter(hId => {
         const l = document.querySelector(`#tabela-cardapio tr[data-id='${hId}']`);
         return parseInt(l.querySelector(".lanchename").dataset.quantidade || 0) > 0;
