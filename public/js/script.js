@@ -1,10 +1,11 @@
-import { obterProdutosCardapio, atualizarEstoque } from "./firebase-front.js";
+import { obterProdutosCardapio, atualizarEstoque, adicionarPedidos } from "./firebase-front.js";
 
 // ===== Variáveis =====
 let total = 0;
 let qtdItens = 0;
 let lanches = [];
 let historico = [];
+
 // Elementos do DOM
 const nome = document.getElementById("nome");
 const endereco = document.getElementById("endereco");
@@ -13,7 +14,6 @@ const resumoTbody = document.querySelector("#resumo tbody");
 const carrinhoContainer = document.getElementById("carrinho");
 const btnCarrinho = document.getElementById("btn-carrinho");
 const lastAddedItem = document.getElementById("lastItem");
-
 
 
 // ===== Inicialização =====
@@ -49,7 +49,7 @@ function montarCardapio() {
     tabela.innerHTML = "";
 
     // ordem desejada → as que não estão aqui ficam no meio, em ordem alfabética
-    const ordemCategorias = ["Lanche", "Pastel", "Bolos e Tortas", "Sobremesa", "Refrigerante"];
+    const ordemCategorias = ["Lanche", "Pastel", "Salgados", "Bolos e Tortas", "Sobremesa", "Refrigerante"];
 
     // Agrupar por categoria
     const categorias = lanches.reduce((acc, p) => {
@@ -296,12 +296,15 @@ function enviarPedido(e) {
     if (total < 1) return Swal.fire("Erro!", "Por favor faça um pedido!", "error");
     if (!nome.value.trim()) return Swal.fire("Erro!", "Por favor insira um nome!", "error");
     if (!endereco.value.trim()) return Swal.fire("Erro!", "Por favor insira um endereço!", "error");
-
+    let ped = '';
     let estoqueInsuficiente = [];
     resumoTbody.querySelectorAll("tr").forEach(tr => {
         const id = tr.dataset.id;
-        const qtd = parseInt(tr.querySelector("td:first-child").textContent.split('x')[1]);
+        const linha = document.querySelector(`#tabela-cardapio tr[data-id='${id}']`);
+        const qtd = parseInt(linha.querySelector(".lanchename").dataset.quantidade);
         const lanche = lanches.find(l => l.id == id);
+        ped += `<br> - *${lanche.nome} x${qtd}* R$ ${(lanche.preco * qtd).toFixed(2).replace('.', ',')}\n`;
+
         if (qtd > lanche.quantidade) {
             estoqueInsuficiente.push(`${lanche.nome} (disponível: ${lanche.quantidade}, pedido: ${qtd})`);
         }
@@ -315,31 +318,65 @@ function enviarPedido(e) {
         );
     }
 
+    Swal.fire({
+        title: "Confirmar Pedido?",
+        html: `<b>Deseja confirmar seu pedido?</b><br>${ped}`,
+        showCancelButton: false,
+        showDenyButton: true,
+        confirmButtonText: "Confirmar✅",
+        denyButtonText: "Cancelar❌"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            abrirWhatsApp();
+        } else if (result.isDenied) {
+            Swal.fire("Cancelado!", "Que pena você cancelou o pedido!", "warning");
+        }
+    })
     salvarUsuario();
-    abrirWhatsApp();
 }
+
+
 
 // Gera texto do pedido
 async function gerarPedido() {
     let ped = '';
     let promises = [];
+    let pedido = {
+        cliente: nome.value,
+        endereco: endereco.value,
+        obs: obs.value,
+        produtos: [],
+        total: total,
+        status: 'Pendente',
+        data: new Date()
+    }
+
     resumoTbody.querySelectorAll("tr").forEach(tr => {
         const id = tr.dataset.id;
         const qtd = parseInt(tr.querySelector("td:first-child").textContent.split('x')[1]);
         const lanche = lanches.find(l => l.id == id);
         const novoEstoque = lanche.quantidade - qtd;
         ped += `\n- *${lanche.nome} x${qtd}* R$ ${(lanche.preco * qtd).toFixed(2).replace('.', ',')}\n`;
+
+        pedido.produtos.push({
+            id: id,
+            nome: lanche.nome,
+            preco: parseFloat(lanche.preco),
+            quantidade: parseInt(qtd)
+        });
         promises.push(atualizarEstoque(id, novoEstoque)); // Passa o novo valor absoluto
     });
+    console.log(pedido)
+    await adicionarPedidos(pedido);
     await Promise.all(promises)
     return ped;
 }
 
 // Abre WhatsApp
 async function abrirWhatsApp() {
-    const pedido = await gerarPedido();
+    const pedido = gerarPedido();
     const mensagem = `Cliente: *${nome.value.trim()}*\nOlá, quero pedir:\n${pedido}\nTotal: *R$${total.toFixed(2).replace('.', ',')}*\nEndereço: ${endereco.value.trim()}\n*Obs: ${obs.value.trim()}*`;
     window.open(`https://wa.me/5579999204686?text=${encodeURIComponent(mensagem)}`);
-    location.reload();
+    //location.reload();
 }
 

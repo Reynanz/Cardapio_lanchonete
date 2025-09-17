@@ -1,0 +1,19 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Coleção de produtos
+    match /produtos/{produtoId} {
+      // Apenas admins podem ler e escrever direto
+      allow read, write: if request.auth != null && request.auth.token.admin == true;
+    }
+
+    // Coleção de pedidos
+    match /pedidos/{pedidoId} {
+      // Admin pode ler, atualizar e deletar
+      allow read, update, delete: if request.auth != null && request.auth.token.admin == true;
+      // Front não tem acesso direto; pedidos criados via Function
+      allow create: if false;
+    }
+  }
+}

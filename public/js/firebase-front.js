@@ -1,8 +1,8 @@
 // firebase-frontend.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getFirestore, collection, onSnapshot, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { getFirestore, collection, onSnapshot, updateDoc, doc, addDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyDQVNsVVzdnYnVFl8SEA6PcgOHweNo3jNs",
   authDomain: "cardapio-lanchonete-44865.firebaseapp.com",
   projectId: "cardapio-lanchonete-44865",
@@ -15,6 +15,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+
+
 export function obterProdutosCardapio(callback) {
     const produtosRef = collection(db, "produtos");
     onSnapshot(produtosRef, snapshot => {
@@ -23,6 +25,13 @@ export function obterProdutosCardapio(callback) {
     });
 }
 
+export async function adicionarPedidos(dados) {
+		await addDoc(collection(db, "pedidos"), dados);
+        console.log("Pedido criado!")
+	}
+
+
 export async function atualizarEstoque(id, novaQuantidade) {
     await updateDoc(doc(db, "produtos", id), { quantidade: novaQuantidade });
 }
+
