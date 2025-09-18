@@ -335,12 +335,12 @@ function enviarPedido(e) {
     salvarUsuario();
 }
 
-
-
 // Gera texto do pedido
 async function gerarPedido() {
-    let ped = '';
+    let prod = '';
+
     let promises = [];
+
     let pedido = {
         cliente: nome.value,
         endereco: endereco.value,
@@ -356,7 +356,7 @@ async function gerarPedido() {
         const qtd = parseInt(tr.querySelector("td:first-child").textContent.split('x')[1]);
         const lanche = lanches.find(l => l.id == id);
         const novoEstoque = lanche.quantidade - qtd;
-        ped += `\n- *${lanche.nome} x${qtd}* R$ ${(lanche.preco * qtd).toFixed(2).replace('.', ',')}\n`;
+        prod += `\n- *${lanche.nome} x${qtd}* R$ ${(lanche.preco * qtd).toFixed(2).replace('.', ',')}\n`;
 
         pedido.produtos.push({
             id: id,
@@ -366,15 +366,18 @@ async function gerarPedido() {
         });
         promises.push(atualizarEstoque(id, novoEstoque)); // Passa o novo valor absoluto
     });
-    console.log(pedido)
+
+    console.log("PROD:", prod);
+    console.log("PEDIDO:", pedido);
+
     await adicionarPedidos(pedido);
-    await Promise.all(promises)
-    return ped;
+    await Promise.all(promises);
+    return prod;
 }
 
 // Abre WhatsApp
 async function abrirWhatsApp() {
-    const pedido = gerarPedido();
+    const pedido = await gerarPedido();
     const mensagem = `Cliente: *${nome.value.trim()}*\nOlá, quero pedir:\n${pedido}\nTotal: *R$${total.toFixed(2).replace('.', ',')}*\nEndereço: ${endereco.value.trim()}\n*Obs: ${obs.value.trim()}*`;
     window.open(`https://wa.me/5579999204686?text=${encodeURIComponent(mensagem)}`);
     //location.reload();
