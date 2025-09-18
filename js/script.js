@@ -291,7 +291,7 @@ function salvarUsuario() {
 }
 
 // Envia pedido
-function enviarPedido(e) {
+async function enviarPedido(e) {
     e.preventDefault();
     if (total < 1) return Swal.fire("Erro!", "Por favor faça um pedido!", "error");
     if (!nome.value.trim()) return Swal.fire("Erro!", "Por favor insira um nome!", "error");
@@ -318,20 +318,23 @@ function enviarPedido(e) {
         );
     }
 
-    Swal.fire({
+    const result = await Swal.fire({
         title: "Confirmar Pedido?",
         html: `<b>Deseja confirmar seu pedido?</b><br>${ped}`,
         showCancelButton: false,
         showDenyButton: true,
         confirmButtonText: "Confirmar✅",
         denyButtonText: "Cancelar❌"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            abrirWhatsApp();
-        } else if (result.isDenied) {
-            Swal.fire("Cancelado!", "Que pena você cancelou o pedido!", "warning");
-        }
     })
+    if ( result.isConfirmed) {
+        abrirWhatsApp();
+
+        console.log("Confirmado!")
+    } else if (result.isDenied) {
+        Swal.fire("Cancelado!", "Que pena você cancelou o pedido!", "warning");
+        return;
+    }
+
     salvarUsuario();
 }
 
@@ -379,7 +382,10 @@ async function gerarPedido() {
 async function abrirWhatsApp() {
     const pedido = await gerarPedido();
     const mensagem = `Cliente: *${nome.value.trim()}*\nOlá, quero pedir:\n${pedido}\nTotal: *R$${total.toFixed(2).replace('.', ',')}*\nEndereço: ${endereco.value.trim()}\n*Obs: ${obs.value.trim()}*`;
-    window.open(`https://wa.me/5579999204686?text=${encodeURIComponent(mensagem)}`);
-    location.reload();
+    
+    const url = `https://wa.me/5579999204686?text=${encodeURIComponent(mensagem)}`;
+    window.location.href = url;
+
+    setTimeout(() => window.location.reload(), 2000);
 }
 
