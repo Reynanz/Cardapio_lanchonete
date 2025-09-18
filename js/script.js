@@ -380,6 +380,6 @@ async function abrirWhatsApp() {
     const pedido = await gerarPedido();
     const mensagem = `Cliente: *${nome.value.trim()}*\nOlá, quero pedir:\n${pedido}\nTotal: *R$${total.toFixed(2).replace('.', ',')}*\nEndereço: ${endereco.value.trim()}\n*Obs: ${obs.value.trim()}*`;
     window.open(`https://wa.me/5579999204686?text=${encodeURIComponent(mensagem)}`);
-    //location.reload();
+    location.reload();
 }
 
