@@ -326,7 +326,7 @@ async function enviarPedido(e) {
         confirmButtonText: "Confirmar✅",
         denyButtonText: "Cancelar❌"
     })
-    if ( result.isConfirmed) {
+    if (result.isConfirmed) {
         abrirWhatsApp();
 
         console.log("Confirmado!")
@@ -356,16 +356,19 @@ async function gerarPedido() {
 
     resumoTbody.querySelectorAll("tr").forEach(tr => {
         const id = tr.dataset.id;
-        const qtd = parseInt(tr.querySelector("td:first-child").textContent.split('x')[1]);
+        const linha = document.querySelector(`#tabela-cardapio tr[data-id='${id}']`);
+        const qtd = parseInt(linha.querySelector(".lanchename").dataset.quantidade);
         const lanche = lanches.find(l => l.id == id);
         const novoEstoque = lanche.quantidade - qtd;
+        const categ = lanche.categoria;
         prod += `\n- *${lanche.nome} x${qtd}* R$ ${(lanche.preco * qtd).toFixed(2).replace('.', ',')}\n`;
 
         pedido.produtos.push({
             id: id,
             nome: lanche.nome,
             preco: parseFloat(lanche.preco),
-            quantidade: parseInt(qtd)
+            quantidade: parseInt(qtd),
+            categoria: categ
         });
         promises.push(atualizarEstoque(id, novoEstoque)); // Passa o novo valor absoluto
     });
@@ -382,7 +385,7 @@ async function gerarPedido() {
 async function abrirWhatsApp() {
     const pedido = await gerarPedido();
     const mensagem = `Cliente: *${nome.value.trim()}*\nOlá, quero pedir:\n${pedido}\nTotal: *R$${total.toFixed(2).replace('.', ',')}*\nEndereço: ${endereco.value.trim()}\n*Obs: ${obs.value.trim()}*`;
-    
+
     const url = `https://wa.me/5579999204686?text=${encodeURIComponent(mensagem)}`;
     window.location.href = url;
 
