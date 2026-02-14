@@ -185,20 +185,6 @@ function montarResumo() {
     });
 }
 
-// Remove item
-/*
-function removeItem(id) {
-    const linha = document.querySelector(`#tabela-cardapio tr[data-id='${id}']`);
-    linha.querySelector(".lanchename").dataset.quantidade-- ;
-    historico = historico.filter(hId => {
-        const l = document.querySelector(`#tabela-cardapio tr[data-id='${hId}']`);
-        return parseInt(l.querySelector(".lanchename").dataset.quantidade || 0) > 0;
-    });
-    montarResumo();
-    somaTotal();
-    atualizarLastItem();
-}
-*/
 
 // Adicionar e subtrair item
 function addItem(id) {
